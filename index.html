@@ -44,7 +44,7 @@
         #loader { transition: opacity 0.3s ease; }
         img { image-rendering: -webkit-optimize-contrast; }
 
-        /* Estilos do Chat da IA (Tela Inteira) */
+        /* Estilos do Chat da IA */
         .chat-bubble-ai { background-color: #ffffff; border-radius: 16px 16px 16px 4px; color: #1f2937; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .chat-bubble-user { background-color: #10b981; border-radius: 16px 16px 4px 16px; color: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .typing-dot { animation: typing 1.4s infinite ease-in-out both; }
@@ -53,18 +53,18 @@
         @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
     </style>
 </head>
-<body class="text-gray-800 relative min-h-screen">
+<body class="text-gray-800 relative min-h-screen overflow-x-hidden">
 
     <!-- LOADER -->
     <div id="loader" class="fixed inset-0 bg-white z-[9999] flex-col items-center justify-center" style="display: none; opacity: 0;">
         <div class="w-12 h-12 border-4 border-brand-blue border-t-brand-cyan rounded-full animate-spin"></div>
-        <p class="mt-4 text-brand-blue font-bold animate-pulse">Carregando...</p>
+        <p class="mt-4 text-brand-blue font-bold animate-pulse">A carregar...</p>
     </div>
 
     <!-- TOAST NOTIFICATION -->
     <div id="toast" class="fixed top-5 right-5 transform translate-x-full opacity-0 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 z-[10000] flex items-center gap-2">
         <i class="ph-fill ph-check-circle text-xl"></i>
-        <span id="toast-msg">Salvo com sucesso!</span>
+        <span id="toast-msg">Guardado com sucesso!</span>
     </div>
 
     <!-- MODAL DE EXCLUSÃO -->
@@ -74,7 +74,7 @@
                 <div class="bg-red-100 text-red-500 p-3 rounded-full"><i class="ph-fill ph-warning-circle text-2xl"></i></div>
                 <h3 class="text-xl font-bold text-gray-900">Excluir Item?</h3>
             </div>
-            <p class="text-gray-500 text-sm mb-6">Tem certeza que deseja excluir esta opção? Lembre-se de clicar em "Salvar" depois no painel.</p>
+            <p class="text-gray-500 text-sm mb-6">Tem a certeza que deseja excluir esta opção? Lembre-se de clicar em "Guardar" depois no painel.</p>
             <div class="flex justify-end gap-3">
                 <button onclick="closeDeleteModal()" class="px-4 py-2 text-gray-600 font-semibold hover:bg-gray-100 rounded-lg transition-colors">Cancelar</button>
                 <button onclick="executeDelete()" class="px-4 py-2 bg-brand-red hover:bg-red-700 text-white font-semibold rounded-lg transition-colors shadow-md">Sim, excluir</button>
@@ -97,11 +97,11 @@
 
             <div class="mb-8">
                 <h3 class="font-bold text-xl text-brand-blue mb-3">Detalhes do Produto</h3>
-                <div id="modal-product-details" class="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap bg-gray-50 p-4 rounded-xl border">Detalhes carregarão aqui...</div>
+                <div id="modal-product-details" class="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap bg-gray-50 p-4 rounded-xl border">Os detalhes serão carregados aqui...</div>
             </div>
 
             <div class="flex flex-col gap-3">
-                <a id="modal-btn-wpp" href="#" target="_blank" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-xl text-center flex items-center justify-center gap-2 shadow-lg transition-transform hover:scale-105">
+                <a id="modal-btn-wpp" href="#" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-xl text-center flex items-center justify-center gap-2 shadow-lg transition-transform hover:scale-105">
                     <i class="ph-fill ph-whatsapp-logo text-2xl"></i> Fale comigo no WhatsApp
                 </a>
             </div>
@@ -109,9 +109,48 @@
     </div>
 
     <!-- ========================================== -->
+    <!-- MODAL DE CAPTAÇÃO DE LEADS (INTELIGENTE)   -->
+    <!-- ========================================== -->
+    <div id="lead-modal" class="fixed inset-0 bg-black/60 z-[10010] hidden items-center justify-center backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <i class="ph-fill ph-whatsapp-logo text-emerald-500 text-2xl"></i> Fale Connosco
+                </h3>
+                <button onclick="closeLeadModal()" class="text-gray-400 hover:text-gray-700 bg-gray-100 p-1 rounded-full"><i class="ph-bold ph-x text-lg"></i></button>
+            </div>
+            
+            <div id="lead-time-status" class="mb-4 text-xs font-medium p-3 rounded-xl flex items-start gap-2"></div>
+
+            <p class="text-sm text-gray-500 mb-4" id="lead-modal-desc">Por favor, informe os seus dados para agilizarmos o seu atendimento.</p>
+            <p id="lead-error" class="text-red-500 text-xs font-bold hidden mb-3 bg-red-50 p-2 rounded-lg"></p>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">O seu Nome <span class="text-red-500">*</span></label>
+                    <input type="text" id="lead-name" class="w-full border p-3 rounded-xl outline-none focus:border-emerald-500 bg-gray-50 transition-colors" placeholder="Ex: João Silva">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Localidade (Cidade/Bairro) <span class="text-red-500">*</span></label>
+                    <input type="text" id="lead-location" class="w-full border p-3 rounded-xl outline-none focus:border-emerald-500 bg-gray-50 transition-colors" placeholder="Ex: Centro, Lisboa">
+                </div>
+                <div id="lead-subject-container" class="hidden">
+                    <label class="block text-xs font-bold text-gray-700 mb-1">O que deseja? <span class="text-red-500">*</span></label>
+                    <textarea id="lead-subject" rows="2" class="w-full border p-3 rounded-xl outline-none focus:border-emerald-500 bg-gray-50 transition-colors" placeholder="Ex: Gostaria de saber valores, fazer um orçamento..."></textarea>
+                </div>
+            </div>
+
+            <button onclick="submitLeadModal()" class="w-full mt-6 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3.5 rounded-xl shadow-lg transition-transform hover:scale-[1.02] flex justify-center items-center gap-2">
+                Iniciar Conversa <i class="ph-bold ph-paper-plane-right"></i>
+            </button>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
     <!-- JANELA DE CHAT DA IA (TELA INTEIRA)        -->
     <!-- ========================================== -->
-    <div id="ai-chat-window" class="fixed inset-0 bg-gray-100 z-[10005] flex flex-col transform translate-y-full transition-transform duration-300 ease-in-out">
+    <div id="ai-chat-window" class="fixed inset-0 bg-gray-100 z-[10005] flex-col transform translate-y-full transition-transform duration-300 ease-in-out hidden">
         <div class="bg-emerald-500 text-white px-4 py-3 flex justify-between items-center shadow-md z-20">
             <div class="flex items-center gap-3">
                 <div class="w-11 h-11 rounded-full overflow-hidden border-2 border-white bg-white">
@@ -120,7 +159,7 @@
                 <div>
                     <h3 class="font-bold text-base leading-tight" id="chat-header-name">Vendedor</h3>
                     <p class="text-[11px] opacity-90 leading-tight flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse"></span> Assistente Virtual
+                        <span class="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse"></span> Assistente Virtual (24h)
                     </p>
                 </div>
             </div>
@@ -141,12 +180,12 @@
 
         <div class="p-3 bg-white border-t border-gray-200 z-20 pb-safe">
             <form onsubmit="handleChatSubmit(event)" class="flex gap-2 max-w-2xl mx-auto w-full">
-                <input type="text" id="chat-input" placeholder="Digite sua mensagem..." class="flex-1 bg-gray-100 border border-transparent focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500 rounded-full px-5 py-3 text-sm outline-none transition-all shadow-inner" autocomplete="off">
+                <input type="text" id="chat-input" placeholder="Escreva a sua mensagem..." class="flex-1 bg-gray-100 border border-transparent focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500 rounded-full px-5 py-3 text-sm outline-none transition-all shadow-inner" autocomplete="off">
                 <button type="submit" id="chat-submit-btn" class="w-12 h-12 bg-emerald-500 text-white rounded-full flex items-center justify-center hover:bg-emerald-600 transition-colors shadow-md flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed">
                     <i class="ph-fill ph-paper-plane-right text-xl"></i>
                 </button>
             </form>
-            <div class="text-[10px] text-center text-gray-400 mt-2 font-medium">A IA pode cometer erros. Confirme as informações com o vendedor.</div>
+            <div class="text-[10px] text-center text-gray-400 mt-2 font-medium">A IA atende 24h e pode cometer erros. Confirme as informações com o vendedor.</div>
         </div>
     </div>
 
@@ -182,7 +221,7 @@
             </div>
 
             <div class="flex gap-3 w-full justify-start mb-10 px-2">
-                <a id="pub-btn-whatsapp" href="#" target="_blank" class="bg-brand-blue hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg transition-transform hover:scale-105">
+                <a id="pub-btn-whatsapp" href="#" class="bg-brand-blue hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg transition-transform hover:scale-105 cursor-pointer">
                     <i class="ph-fill ph-whatsapp-logo text-xl"></i> Fale comigo
                 </a>
                 <a id="pub-btn-insta" href="#" target="_blank" class="w-12 h-12 bg-brand-blue hover:bg-blue-800 text-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-105 flex-shrink-0">
@@ -191,7 +230,7 @@
             </div>
 
             <div class="w-full mb-10">
-                <h3 class="text-xl font-bold text-gray-800 mb-5 px-2">O que você procura?</h3>
+                <h3 class="text-xl font-bold text-gray-800 mb-5 px-2">O que procura?</h3>
                 <div id="pub-categories" class="flex flex-col gap-3 px-2"></div>
             </div>
 
@@ -201,8 +240,7 @@
             </div>
         </main>
 
-        <!-- Botão Flutuante (Some se a IA estiver desligada) -->
-        <div id="pub-float-container" class="fixed bottom-6 left-0 right-0 z-40 flex justify-center sm:justify-end sm:px-6 px-4 pointer-events-none hidden transition-opacity duration-300">
+        <div id="pub-float-container" class="fixed bottom-6 left-0 right-0 z-40 justify-center sm:justify-end sm:px-6 px-4 pointer-events-none transition-opacity duration-300 flex">
             <div class="relative pointer-events-auto">
                 <button id="pub-float-btn" onclick="toggleAiChat()" class="animate-pulse-soft bg-brand-blue hover:bg-blue-800 text-white rounded-full py-2.5 pl-2 pr-5 shadow-[0_8px_30px_rgb(30,64,175,0.4)] flex items-center gap-3 transition-transform hover:scale-105 border-2 border-white cursor-pointer">
                     <div class="w-10 h-10 rounded-full overflow-hidden bg-white flex-shrink-0 border-2 border-white relative">
@@ -211,7 +249,7 @@
                     </div>
                     <div class="flex flex-col text-left">
                         <span class="text-sm font-bold leading-tight">Estou online.</span>
-                        <span id="pub-float-sub" class="text-[11px] opacity-90 leading-tight">Assistente Virtual (IA)</span>
+                        <span id="pub-float-sub" class="text-[11px] opacity-90 leading-tight">Assistente Virtual (24h)</span>
                     </div>
                 </button>
             </div>
@@ -239,7 +277,7 @@
                 </div>
             </div>
             <h2 class="text-2xl font-bold text-center text-gray-900 mb-2">Acesso Restrito</h2>
-            <p class="text-center text-sm text-gray-500 mb-8">Faça login para editar sua Bio</p>
+            <p class="text-center text-sm text-gray-500 mb-8">Faça o login para editar a sua Bio</p>
 
             <form id="login-form" onsubmit="loginAdmin(event)">
                 <div class="mb-4">
@@ -250,7 +288,7 @@
                     </div>
                 </div>
                 <div class="mb-6">
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Senha</label>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Palavra-passe</label>
                     <div class="relative">
                         <i class="ph-bold ph-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         <input type="password" id="login-pass" required class="w-full pl-10 pr-4 py-3 bg-gray-50 border rounded-xl outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-all" placeholder="••••••••">
@@ -277,7 +315,7 @@
                     <i class="ph-bold ph-eye text-lg sm:text-xl"></i>
                 </button>
                 <button onclick="saveData()" class="bg-emerald-500 hover:bg-emerald-600 px-3 sm:px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-1.5 transition-colors shadow-lg">
-                    <i class="ph-bold ph-floppy-disk"></i> Salvar
+                    <i class="ph-bold ph-floppy-disk"></i> Guardar
                 </button>
                 <button onclick="logoutAdmin()" class="bg-red-500 hover:bg-red-600 px-3 p-2 rounded-lg text-sm font-bold flex items-center transition-colors" title="Sair do Painel">
                     <i class="ph-bold ph-sign-out"></i>
@@ -298,7 +336,7 @@
                         </div>
                     </div>
                     <div class="flex flex-col gap-2 bg-gray-50 p-3 rounded-xl border">
-                        <label class="text-xs font-bold text-gray-700">Logo da Loja (Quadrada)</label>
+                        <label class="text-xs font-bold text-gray-700">Logótipo da Loja (Quadrada)</label>
                         <div class="flex items-center gap-3">
                             <img id="adm-logo-preview" src="" class="w-14 h-14 object-contain border-2 border-gray-300 bg-white rounded-md p-1">
                             <input type="file" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300 cursor-pointer" onchange="handleImageUpload(event, 'logoUrl', 'adm-logo-preview')">
@@ -308,7 +346,7 @@
             </section>
 
             <section class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
-                <h2 class="font-bold text-brand-blue mb-4 flex items-center gap-2 border-b pb-2"><i class="ph-bold ph-user"></i> 2. Informações e Contato</h2>
+                <h2 class="font-bold text-brand-blue mb-4 flex items-center gap-2 border-b pb-2"><i class="ph-bold ph-user"></i> 2. Informações e Contacto</h2>
                 <div class="grid gap-4">
                     <div class="grid grid-cols-2 gap-4">
                         <div class="col-span-2 sm:col-span-1">
@@ -334,26 +372,40 @@
                             <input type="text" id="adm-insta" class="w-full border p-2 rounded-lg outline-none focus:border-brand-blue bg-gray-50">
                         </div>
                     </div>
+
+                    <div class="border-t pt-4 mt-2">
+                        <h3 class="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="ph-fill ph-calendar-check"></i> Horários de Atendimento (Humano)</h3>
+                        <p class="text-[10px] text-gray-500 mb-3">Defina os dias e horários em que atende no WhatsApp. Desmarque o dia para informar que é folga.</p>
+                        
+                        <div id="adm-schedule-container" class="space-y-2 mb-4">
+                            <!-- Injetado dinamicamente -->
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 mb-1">Observação (Exibida durante o expediente)</label>
+                            <input type="text" id="adm-time-obs" class="w-full border p-2 rounded-lg outline-none focus:border-brand-blue bg-gray-50" placeholder="Ex: Respondemos em até 10 minutos!">
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
-            <!-- SEÇÃO: INTELIGÊNCIA ARTIFICIAL -->
             <section class="bg-emerald-50 p-5 rounded-2xl shadow-sm border border-emerald-200 relative overflow-hidden">
                 <i class="ph-fill ph-sparkle absolute -top-4 -right-4 text-emerald-200 text-6xl opacity-50"></i>
                 <div class="flex items-center justify-between mb-4 border-b border-emerald-200 pb-2 relative z-10">
-                    <h2 class="font-bold text-emerald-700 flex items-center gap-2"><i class="ph-bold ph-robot"></i> 3. Inteligência Artificial (Chatbot)</h2>
+                    <h2 class="font-bold text-emerald-700 flex items-center gap-2"><i class="ph-bold ph-robot"></i> 3. Inteligência Artificial (24h)</h2>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" id="adm-ai-enabled" class="sr-only peer">
                         <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500 shadow-inner"></div>
                     </label>
                 </div>
                 <div class="grid gap-4 relative z-10">
-                    <p class="text-xs text-emerald-800 bg-emerald-100 p-2 rounded-lg">Quando ativado, o botão flutuante aparecerá e abrirá um chat onde a IA do Google responderá os clientes. Quando desativado, o botão sumirá completamente da página.</p>
+                    <p class="text-xs text-emerald-800 bg-emerald-100 p-2 rounded-lg">A IA funciona 24 horas por dia, 7 dias por semana, não importa o seu horário de expediente.<br><br><b>Se ativada:</b> O botão flutuante aparecerá na tela a conectar o cliente ao Chat.<br><b>Se desativada:</b> O botão flutuante sumirá completamente do site.</p>
                     <div>
                         <label class="block text-xs font-bold text-emerald-700 mb-1">Tom de Voz da IA</label>
                         <select id="adm-ai-tone" class="w-full border p-2 rounded-lg outline-none focus:border-emerald-500 bg-white">
                             <option value="Amigável e acolhedor">Amigável e acolhedor</option>
-                            <option value="Persuasivo e focado em vendas">Persuasivo e focado em fechamento</option>
+                            <option value="Persuasivo e focado em vendas">Persuasivo e focado em fecho de vendas</option>
                             <option value="Profissional e corporativo">Profissional e objetivo</option>
                             <option value="Descontraído e animado">Descontraído e animado</option>
                         </select>
@@ -362,7 +414,7 @@
                         <label class="block text-xs font-bold text-emerald-700 mb-1 flex justify-between">
                             Instruções / Regras para a IA
                         </label>
-                        <textarea id="adm-ai-inst" rows="4" class="w-full border p-2 rounded-lg outline-none focus:border-emerald-500 bg-white" placeholder="Ex: Tente pegar o nome do cliente logo no início. Ofereça parcelamento sem juros..."></textarea>
+                        <textarea id="adm-ai-inst" rows="4" class="w-full border p-2 rounded-lg outline-none focus:border-emerald-500 bg-white" placeholder="Ex: Tente pedir o nome do cliente logo no início. Ofereça prestações sem juros..."></textarea>
                     </div>
                 </div>
             </section>
@@ -373,7 +425,8 @@
                     <button onclick="addOffer()" class="bg-brand-red text-white text-xs px-3 py-1.5 rounded-lg hover:bg-red-800 transition-colors font-bold">+ Adicionar Produto</button>
                 </div>
                 <div id="adm-offers-list" class="flex flex-col gap-6"></div>
-                <p class="text-[10px] text-center text-gray-400 mt-2">Os detalhes e produtos inseridos aqui também treinam a IA.</p>
+                <!-- Alerta extra para o utilizador saber que pode usar links -->
+                <p class="text-[10px] text-center text-gray-500 mt-2">Dica: Se quiser adicionar muitas imagens, opte por utilizar o botão <b>+ Link</b> para não consumir o armazenamento do sistema.</p>
             </section>
 
             <section class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
@@ -393,7 +446,6 @@
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // CREDENCIAIS FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyAbzHE1b74qB8M5Qn3dClGeu2NbgPfRCZE",
             authDomain: "linknabiowash.firebaseapp.com",
@@ -410,26 +462,25 @@
         
         let currentUser = null;
 
-        // =====================================================================
-        // CHAVE DA API DA INTELIGÊNCIA ARTIFICIAL (GEMINI)
-        // OBSERVAÇÃO: Coloque sua chave aqui para o seu ambiente de produção.
-        // O código agora identifica sozinho qual modelo da API usar!
-        // =====================================================================
-        const apiKey = "AIzaSyCQY2KCRDStkDRrMBSZG4bPPE2XSh6V4Ro"; 
+        const apiKey = ""; 
+        const minhalChavePessoal = "AIzaSyDeVL2dxw3u585VtxAZELwAY3VFZ1L9dFY"; 
         
         let aiChatHistory = []; 
         let isChatOpen = false;
 
+        let currentLeadContext = '';
+        let currentLeadData = '';
+
         const availableIcons = [
-            { id: 'device-mobile', name: '📱 Celular' }, { id: 'television', name: '📺 TVs' },
+            { id: 'device-mobile', name: '📱 Telemóvel' }, { id: 'television', name: '📺 TVs' },
             { id: 'plug', name: '🔌 Eletrodomésticos' }, { id: 'armchair', name: '🪑 Móveis' },
             { id: 'baby-carriage', name: '🍼 Infantil' }, { id: 'bicycle', name: '🚲 Bicicletas' },
-            { id: 'car', name: '🚗 Automotivo' }, { id: 'shopping-bag', name: '🛍️ Ofertas' }
+            { id: 'car', name: '🚗 Automóvel' }, { id: 'shopping-bag', name: '🛍️ Ofertas' }
         ];
 
         let appData = {
             name: "Washington Barbalho", role: "Vendedor Especialista",
-            bio: "Conectando você aos melhores produtos com as melhores condições!",
+            bio: "A conectar você aos melhores produtos com as melhores condições!",
             photoUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=300&auto=format&fit=crop",
             logoUrl: "https://placehold.co/150x150/ffffff/1e40af?text=LOGO",
             whatsapp: "88999990000", instagram: "seu_usuario",
@@ -437,15 +488,22 @@
             aiSettings: {
                 enabled: false,
                 tone: "Amigável e acolhedor",
-                instructions: "Cumprimente o cliente com entusiasmo. Mostre as vantagens de comprar com você. Peça o nome dele para um atendimento personalizado."
+                instructions: "Cumprimente o cliente com entusiasmo. Mostre as vantagens de comprar consigo. Peça o nome dele para um atendimento personalizado."
+            },
+            businessHours: {
+                "0": { active: false, start: "08:00", end: "12:00" }, 
+                "1": { active: true, start: "08:00", end: "18:00" },  
+                "2": { active: true, start: "08:00", end: "18:00" },  
+                "3": { active: true, start: "08:00", end: "18:00" },  
+                "4": { active: true, start: "08:00", end: "18:00" },  
+                "5": { active: true, start: "08:00", end: "18:00" },  
+                "6": { active: true, start: "08:00", end: "13:00" },  
+                obs: "Atendimento online. Respondemos rápido!"
             }
         };
 
         let itemToDelete = null;
 
-        // ==========================================
-        // SESSÃO E BANCO DE DADOS
-        // ==========================================
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
             if(window.location.hash === '#admin') {
@@ -475,6 +533,24 @@
                     if(!data.offers) data.offers = [];
                     if(!data.categories) data.categories = [];
                     if(!data.aiSettings) data.aiSettings = appData.aiSettings;
+                    
+                    if(!data.businessHours) {
+                        data.businessHours = appData.businessHours; 
+                    } else if (data.businessHours.start !== undefined && data.businessHours["1"] === undefined) {
+                        const oldStart = data.businessHours.start;
+                        const oldEnd = data.businessHours.end;
+                        const oldObs = data.businessHours.obs;
+                        data.businessHours = {
+                            "0": { active: false, start: oldStart, end: oldEnd },
+                            "1": { active: true, start: oldStart, end: oldEnd },
+                            "2": { active: true, start: oldStart, end: oldEnd },
+                            "3": { active: true, start: oldStart, end: oldEnd },
+                            "4": { active: true, start: oldStart, end: oldEnd },
+                            "5": { active: true, start: oldStart, end: oldEnd },
+                            "6": { active: true, start: oldStart, end: oldEnd },
+                            obs: oldObs
+                        };
+                    }
                     appData = data;
                 }
                 
@@ -489,9 +565,6 @@
             }, (error) => console.error(error));
         }
 
-        // ==========================================
-        // GERENCIAMENTO DE TELAS
-        // ==========================================
         window.switchView = (viewName) => {
             showLoader();
             setTimeout(() => {
@@ -521,63 +594,173 @@
             document.getElementById('view-login').classList.remove('flex'); document.getElementById('view-admin').classList.remove('hidden'); window.scrollTo(0, 0);
         }
 
-        // ==========================================
-        // INTELIGÊNCIA ARTIFICIAL (GEMINI API)
-        // ==========================================
+        window.openLeadModal = (context, data = '') => {
+            currentLeadContext = context;
+            currentLeadData = data;
+            
+            document.getElementById('lead-name').value = '';
+            document.getElementById('lead-location').value = '';
+            document.getElementById('lead-subject').value = '';
+            document.getElementById('lead-error').classList.add('hidden');
+
+            const subjectContainer = document.getElementById('lead-subject-container');
+            const desc = document.getElementById('lead-modal-desc');
+
+            if (context === 'main_wpp') {
+                subjectContainer.classList.remove('hidden');
+                desc.textContent = "Como podemos ajudá-lo hoje?";
+            } else if (context === 'category') {
+                subjectContainer.classList.add('hidden');
+                desc.textContent = `Ótima escolha! Para ver opções de ${data}, informe os seus dados.`;
+            } else if (context === 'offer') {
+                subjectContainer.classList.add('hidden');
+                desc.textContent = `Informe os seus dados para ver disponibilidade e valores de ${data}.`;
+            }
+
+            const statusEl = document.getElementById('lead-time-status');
+            const now = new Date();
+            const currentDay = now.getDay(); 
+            const currentMinutesOfDay = now.getHours() * 60 + now.getMinutes();
+            
+            const todaySchedule = appData.businessHours[currentDay];
+            let isOpen = false;
+
+            if (todaySchedule && todaySchedule.active) {
+                const startParts = (todaySchedule.start || "08:00").split(':');
+                const endParts = (todaySchedule.end || "18:00").split(':');
+                
+                const startMinutes = parseInt(startParts[0]) * 60 + parseInt(startParts[1]);
+                const endMinutes = parseInt(endParts[0]) * 60 + parseInt(endParts[1]);
+
+                if (startMinutes <= endMinutes) {
+                    isOpen = currentMinutesOfDay >= startMinutes && currentMinutesOfDay <= endMinutes;
+                } else {
+                    isOpen = currentMinutesOfDay >= startMinutes || currentMinutesOfDay <= endMinutes;
+                }
+            }
+
+            if (isOpen) {
+                statusEl.className = "mb-4 text-xs font-medium p-3 rounded-xl flex items-start gap-2 bg-emerald-50 text-emerald-700 border border-emerald-100";
+                statusEl.innerHTML = `<i class="ph-fill ph-clock text-lg mt-0.5"></i> <div><strong>Atendimento Online</strong><br>${appData.businessHours.obs || "Estamos online para o atender!"}</div>`;
+            } else {
+                statusEl.className = "mb-4 text-xs font-medium p-3 rounded-xl flex items-start gap-2 bg-amber-50 text-amber-700 border border-amber-100";
+                statusEl.innerHTML = `<i class="ph-fill ph-warning-circle text-lg mt-0.5"></i> <div><strong>Fora do horário comercial</strong><br>O vendedor não está online no momento e a resposta pode demorar um pouco. Deixe a sua mensagem!</div>`;
+            }
+
+            const modal = document.getElementById('lead-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeLeadModal = () => {
+            const modal = document.getElementById('lead-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        };
+
+        window.submitLeadModal = () => {
+            const name = document.getElementById('lead-name').value.trim();
+            const location = document.getElementById('lead-location').value.trim();
+            const subject = document.getElementById('lead-subject').value.trim();
+            const errorLabel = document.getElementById('lead-error');
+
+            if (!name || !location) {
+                errorLabel.textContent = "Por favor, preencha o seu nome e localidade.";
+                errorLabel.classList.remove('hidden');
+                return;
+            }
+
+            if (currentLeadContext === 'main_wpp' && !subject) {
+                errorLabel.textContent = "Por favor, informe o que deseja.";
+                errorLabel.classList.remove('hidden');
+                return;
+            }
+
+            errorLabel.classList.add('hidden');
+
+            let message = `Olá ${appData.name}! O meu nome é *${name}*, sou de *${location}*.\n\n`;
+
+            if (currentLeadContext === 'main_wpp') {
+                message += `*Desejo:* ${subject}`;
+            } else if (currentLeadContext === 'category') {
+                message += `Gostaria de ver opções e valores de *${currentLeadData}*.`;
+            } else if (currentLeadContext === 'offer') {
+                message += `Gostaria de saber mais detalhes e condições do produto: *${currentLeadData}*.`;
+            }
+
+            const waLink = `https://wa.me/55${appData.whatsapp}?text=${encodeURIComponent(message)}`;
+            window.open(waLink, '_blank');
+            closeLeadModal();
+        };
+
         window.toggleAiChat = () => {
             const chatWindow = document.getElementById('ai-chat-window');
             isChatOpen = !isChatOpen;
             
             if(isChatOpen) {
-                chatWindow.classList.remove('translate-y-full');
-                chatWindow.classList.add('translate-y-0');
+                chatWindow.classList.remove('hidden');
+                chatWindow.classList.add('flex');
+                
+                requestAnimationFrame(() => {
+                    chatWindow.classList.remove('translate-y-full');
+                    chatWindow.classList.add('translate-y-0');
+                });
+                
                 document.body.style.overflow = 'hidden'; 
                 
                 document.getElementById('chat-header-photo').src = appData.photoUrl;
                 document.getElementById('chat-header-name').textContent = appData.name;
 
                 if(aiChatHistory.length === 0) {
-                    appendMessage("ai", `Olá! Sou o assistente virtual do(a) **${appData.name}**. Como posso ajudar você hoje?`);
+                    appendMessage("ai", `Olá! Sou o assistente virtual do(a) **${appData.name}**. Como posso ajudar hoje?`);
                 }
                 setTimeout(() => document.getElementById('chat-input').focus(), 300);
             } else {
                 chatWindow.classList.remove('translate-y-0');
                 chatWindow.classList.add('translate-y-full');
                 document.body.style.overflow = 'auto'; 
+                
+                setTimeout(() => {
+                    if(!isChatOpen) {
+                        chatWindow.classList.remove('flex');
+                        chatWindow.classList.add('hidden');
+                    }
+                }, 300);
             }
         };
 
-        async function fetchWithRetry(url, payload) {
-            const delays = [1000, 2000, 4000];
+        async function fetchWithRetry(url, options, maxRetries = 4) {
+            const delays = [1000, 2000, 4000, 8000]; 
             let lastError;
 
-            for (let i = 0; i <= delays.length; i++) {
+            for (let i = 0; i <= maxRetries; i++) {
                 try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
+                    const response = await fetch(url, options);
 
-                    if (!response.ok) {
-                        const errData = await response.json().catch(() => ({}));
-                        const errMsg = errData.error?.message || `HTTP ${response.status}`;
-                        lastError = new Error(errMsg);
-                        if (response.status >= 400 && response.status < 500 && response.status !== 429) {
-                            throw lastError; // Se for erro de auth/bad request, aborta retentativas
-                        }
-                    } else {
+                    if (response.ok) {
                         return await response.json();
+                    }
+
+                    const errData = await response.json().catch(() => ({}));
+                    const errMsg = errData.error?.message || `HTTP ${response.status}`;
+                    lastError = new Error(errMsg);
+
+                    if (response.status >= 400 && response.status < 500 && response.status !== 429) {
+                        throw lastError; 
                     }
                 } catch (error) {
                     lastError = error;
-                    if (error.message.includes("HTTP 400") || error.message.includes("API key not valid")) {
+                    if (error.message.includes("API key") || error.message.includes("not found")) {
                         throw error;
                     }
                 }
-                if (i < delays.length) await new Promise(r => setTimeout(r, delays[i]));
+                if (i < maxRetries) {
+                    await new Promise(resolve => setTimeout(resolve, delays[i]));
+                }
             }
-            throw lastError;
+            throw lastError; 
         }
 
         window.handleChatSubmit = async (e) => {
@@ -587,8 +770,7 @@
             const message = inputEl.value.trim();
             if(!message) return;
 
-            inputEl.disabled = true;
-            submitBtn.disabled = true;
+            inputEl.disabled = true; submitBtn.disabled = true;
 
             appendMessage("user", message);
             inputEl.value = '';
@@ -616,20 +798,25 @@ O WhatsApp oficial do vendedor para caso o cliente precise finalizar a compra ou
 SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
 
             try {
-                // Seleciona a chave e o modelo correto dependendo do ambiente
-                const dynamicApiKey = typeof apiKey !== 'undefined' && apiKey !== "" ? apiKey : (typeof __gemini_api_key !== 'undefined' ? __gemini_api_key : "");
+                const dynamicApiKey = apiKey || (typeof __gemini_api_key !== 'undefined' ? __gemini_api_key : minhalChavePessoal);
                 
-                // Se o ambiente estiver utilizando a chave injetada pelo sistema interno do canvas, usa o preview
-                const isInternalEnv = typeof __gemini_api_key !== 'undefined' && dynamicApiKey === __gemini_api_key;
-                const modelToUse = isInternalEnv ? "gemini-2.5-flash-preview-09-2025" : "gemini-1.5-flash";
+                const isInternalTest = typeof __gemini_api_key !== 'undefined' && dynamicApiKey === __gemini_api_key;
+                const modelToUse = isInternalTest ? "gemini-2.5-flash-preview-09-2025" : "gemini-3-flash-preview";
                 
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent?key=${dynamicApiKey}`;
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent`;
                 
                 const data = await fetchWithRetry(url, {
-                    contents: aiChatHistory,
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-goog-api-key': dynamicApiKey 
+                    },
+                    body: JSON.stringify({
+                        contents: aiChatHistory,
+                        systemInstruction: { parts: [{ text: systemPrompt }] }
+                    })
                 });
-                
+
                 const aiResponseText = data.candidates[0].content.parts[0].text;
                 
                 aiChatHistory.push({ role: "model", parts: [{ text: aiResponseText }] });
@@ -637,20 +824,21 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
                 appendMessage("ai", aiResponseText);
 
             } catch (error) {
-                console.error("Detalhe do Erro Gemini:", error);
                 document.getElementById('typing-indicator').classList.add('hidden');
                 
-                let fallbackMsg = "Desculpe, a conexão falhou. Por favor, clique no botão de WhatsApp para falar direto comigo!";
-                if(error.message.includes("API key not valid") || error.message.includes("HTTP 400") || error.message.includes("not found")) {
-                    fallbackMsg = "Aviso: A Chave da API (Gemini) está inválida ou modelo indisponível.";
+                let fallbackMsg = "Desculpe, a ligação com a inteligência artificial falhou no momento.";
+                if(error.message.includes("API key not valid")) {
+                    fallbackMsg = "Aviso: A Chave da API (Gemini) está inválida ou restrita. Por favor, verifique as permissões no Google Cloud.";
+                } else if(error.message.includes("not found")) {
+                    fallbackMsg = "Aviso: O modelo configurado na chave de API não foi encontrado.";
+                } else if(error.message.toLowerCase().includes("high demand") || error.message.includes("503")) {
+                    fallbackMsg = "O sistema de IA está a passar por uma alta demanda e não pôde responder agora. Por favor, tente novamente em alguns instantes ou feche o chat para iniciar um atendimento humano!";
                 }
                 
                 appendMessage("ai", fallbackMsg);
                 aiChatHistory.pop();
             } finally {
-                inputEl.disabled = false;
-                submitBtn.disabled = false;
-                inputEl.focus();
+                inputEl.disabled = false; submitBtn.disabled = false; inputEl.focus();
             }
         };
 
@@ -677,9 +865,6 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // ==========================================
-        // RENDERIZAÇÃO PÚBLICA E MODAL DE PRODUTOS
-        // ==========================================
         window.openProductModal = (index) => {
             const offer = appData.offers[index];
             if(!offer) return;
@@ -700,8 +885,13 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
             const detailsText = offer.details || "Nenhum detalhe informado para este produto.";
             document.getElementById('modal-product-details').innerHTML = detailsText.replace(/\n/g, '<br>');
 
-            const waBase = `https://wa.me/55${appData.whatsapp}?text=`;
-            document.getElementById('modal-btn-wpp').href = `${waBase}${encodeURIComponent(`Olá, gostaria de saber mais detalhes e valores do produto: ${offer.title}.`)}`;
+            const btnWpp = document.getElementById('modal-btn-wpp');
+            btnWpp.href = "#";
+            btnWpp.onclick = (e) => {
+                e.preventDefault();
+                closeProductModal(); 
+                openLeadModal('offer', offer.title); 
+            };
 
             const modalEl = document.getElementById('product-modal');
             modalEl.classList.remove('hidden'); modalEl.classList.add('flex');
@@ -718,21 +908,25 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
             document.getElementById('pub-role').textContent = appData.role || '';
             document.getElementById('pub-bio').textContent = appData.bio || '';
             document.getElementById('pub-photo').src = appData.photoUrl || '';
-            document.getElementById('pub-float-photo').src = appData.photoUrl || '';
             document.getElementById('pub-logo').src = appData.logoUrl || '';
             
-            const waLink = `https://wa.me/55${appData.whatsapp}`;
-            document.getElementById('pub-btn-whatsapp').href = waLink;
+            const btnWpp = document.getElementById('pub-btn-whatsapp');
+            btnWpp.href = "#";
+            btnWpp.onclick = (e) => {
+                e.preventDefault();
+                openLeadModal('main_wpp');
+            };
+
             document.getElementById('pub-btn-insta').href = `https://instagram.com/${appData.instagram}`;
 
             const floatContainer = document.getElementById('pub-float-container');
-            
-            // Controle de visualização do botão de IA
             if(appData.aiSettings && appData.aiSettings.enabled) {
-                floatContainer.classList.remove('hidden'); // Exibe o botão
-                document.getElementById('pub-float-photo').src = appData.photoUrl; // Atualiza a foto
+                floatContainer.classList.remove('hidden'); 
+                floatContainer.classList.add('flex'); 
+                document.getElementById('pub-float-photo').src = appData.photoUrl; 
             } else {
-                floatContainer.classList.add('hidden'); // Some com o botão da tela
+                floatContainer.classList.add('hidden');
+                floatContainer.classList.remove('flex');
             }
 
             const catContainer = document.getElementById('pub-categories');
@@ -742,10 +936,9 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
                 const bgClass = isCyan ? 'bg-brand-cyan/10' : 'bg-brand-blue/10';
                 const textClass = isCyan ? 'text-brand-cyan' : 'text-brand-blue';
                 const hoverBg = isCyan ? 'group-hover:bg-brand-cyan' : 'group-hover:bg-brand-blue';
-                const catLink = `${waLink}?text=${encodeURIComponent(`Olá, gostaria de ver opções de ${cat.title}.`)}`;
 
                 const catHTML = `
-                    <a href="${catLink}" target="_blank" class="w-full bg-white border border-gray-100 p-4 rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center gap-4 group">
+                    <button onclick="openLeadModal('category', '${cat.title}')" class="w-full bg-white border border-gray-100 p-4 rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center gap-4 group text-left">
                         <div class="w-12 h-12 ${bgClass} rounded-xl flex items-center justify-center ${textClass} ${hoverBg} group-hover:text-white transition-colors">
                             <i class="ph ph-${cat.icon} text-2xl"></i>
                         </div>
@@ -754,7 +947,7 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
                             <p class="text-xs text-gray-500">${cat.subtitle}</p>
                         </div>
                         <i class="ph ph-caret-right text-gray-400 group-hover:text-brand-blue transition-colors"></i>
-                    </a>
+                    </button>
                 `;
                 catContainer.insertAdjacentHTML('beforeend', catHTML);
             });
@@ -793,9 +986,12 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
             }
         }
 
-        // ==========================================
-        // RENDERIZAÇÃO ADMIN E SINCRONIZAÇÃO
-        // ==========================================
+        window.toggleDayTimes = (dayIndex) => {
+            const isActive = document.getElementById(`adm-day-active-${dayIndex}`).checked;
+            document.getElementById(`adm-day-start-${dayIndex}`).disabled = !isActive;
+            document.getElementById(`adm-day-end-${dayIndex}`).disabled = !isActive;
+        };
+
         function renderAdminView() {
             document.getElementById('adm-name').value = appData.name || '';
             document.getElementById('adm-role').value = appData.role || '';
@@ -804,6 +1000,29 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
             document.getElementById('adm-insta').value = appData.instagram || '';
             document.getElementById('adm-photo-preview').src = appData.photoUrl || '';
             document.getElementById('adm-logo-preview').src = appData.logoUrl || '';
+
+            const daysOfWeek = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+            const scheduleContainer = document.getElementById('adm-schedule-container');
+            scheduleContainer.innerHTML = '';
+            
+            for(let i=0; i<7; i++) {
+                const dayData = appData.businessHours[i];
+                scheduleContainer.innerHTML += `
+                    <div class="flex items-center justify-between p-2 bg-gray-50 border rounded-lg">
+                        <label class="flex items-center gap-2 w-32 cursor-pointer">
+                            <input type="checkbox" id="adm-day-active-${i}" ${dayData.active ? 'checked' : ''} onchange="toggleDayTimes(${i})" class="w-4 h-4 text-brand-blue rounded border-gray-300 focus:ring-brand-blue">
+                            <span class="text-xs font-bold text-gray-700">${daysOfWeek[i]}</span>
+                        </label>
+                        <div class="flex items-center gap-1">
+                            <input type="time" id="adm-day-start-${i}" value="${dayData.start}" class="border border-gray-300 p-1.5 rounded text-xs outline-none focus:border-brand-blue disabled:opacity-40 disabled:bg-gray-200 w-[70px]" ${dayData.active ? '' : 'disabled'}>
+                            <span class="text-[10px] text-gray-400 font-bold">às</span>
+                            <input type="time" id="adm-day-end-${i}" value="${dayData.end}" class="border border-gray-300 p-1.5 rounded text-xs outline-none focus:border-brand-blue disabled:opacity-40 disabled:bg-gray-200 w-[70px]" ${dayData.active ? '' : 'disabled'}>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('adm-time-obs').value = appData.businessHours.obs || '';
 
             document.getElementById('adm-ai-enabled').checked = appData.aiSettings.enabled;
             document.getElementById('adm-ai-tone').value = appData.aiSettings.tone;
@@ -944,6 +1163,15 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
             appData.aiSettings.enabled = document.getElementById('adm-ai-enabled').checked;
             appData.aiSettings.tone = document.getElementById('adm-ai-tone').value;
             appData.aiSettings.instructions = document.getElementById('adm-ai-inst').value;
+
+            for(let i=0; i<7; i++) {
+                if(document.getElementById(`adm-day-active-${i}`)) {
+                    appData.businessHours[i].active = document.getElementById(`adm-day-active-${i}`).checked;
+                    appData.businessHours[i].start = document.getElementById(`adm-day-start-${i}`).value;
+                    appData.businessHours[i].end = document.getElementById(`adm-day-end-${i}`).value;
+                }
+            }
+            appData.businessHours.obs = document.getElementById('adm-time-obs').value;
         }
 
         window.addOffer = () => { syncInputsToData(); appData.offers.unshift({ title: "", subtitle: "", tag: "Oferta", images: [], details: "" }); renderAdminOffers(); };
@@ -966,19 +1194,37 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
             processImageUpload(file, (base64) => { syncInputsToData(); appData.offers[offerIndex].images.push(base64); renderAdminOffers(); });
         };
 
+        // ==========================================
+        // COMPRESSÃO AGRESSIVA DE IMAGENS (CORREÇÃO DE LIMITE 1MB FIRESTORE)
+        // ==========================================
         function processImageUpload(file, callback) {
             showLoader();
             const reader = new FileReader();
             reader.onload = (e) => {
                 const img = new Image();
                 img.onload = () => {
-                    const canvas = document.createElement('canvas'); const MAX_SIZE = 1200; 
+                    const canvas = document.createElement('canvas'); 
+                    // Reduzido para 600px para garantir a compatibilidade com o limite de 1MB do Firestore
+                    const MAX_SIZE = 600; 
                     let width = img.width; let height = img.height;
-                    if (width > height) { if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } } else { if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; } }
-                    canvas.width = width; canvas.height = height; const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height);
-                    callback(canvas.toDataURL('image/jpeg', 0.95)); hideLoader();
-                }; img.src = e.target.result;
-            }; reader.readAsDataURL(file);
+                    
+                    if (width > height) { 
+                        if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } 
+                    } else { 
+                        if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; } 
+                    }
+                    
+                    canvas.width = width; canvas.height = height; 
+                    const ctx = canvas.getContext('2d'); 
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Compressão do JPEG para 70% (impercetível no ecrã, mas poupa muito espaço)
+                    callback(canvas.toDataURL('image/jpeg', 0.7)); 
+                    hideLoader();
+                }; 
+                img.src = e.target.result;
+            }; 
+            reader.readAsDataURL(file);
         }
 
         window.saveData = async () => {
@@ -993,10 +1239,16 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
             try {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'bio_settings', 'main');
                 await setDoc(docRef, appData);
-                showToast("Alterações Salvas!");
+                showToast("Guardado com sucesso!");
                 hideLoader();
             } catch (error) {
-                alert("Erro. Apenas administradores autenticados podem salvar dados.");
+                console.error(error);
+                // Nova mensagem de erro informando o limite de tamanho
+                if(error.code === 'resource-exhausted' || error.message.includes('payload') || error.message.includes('size')) {
+                    alert("Erro: O tamanho total das imagens ultrapassou o limite do banco de dados. Tente remover algumas imagens antigas ou use a opção '+ Link' em vez de Upload.");
+                } else {
+                    alert("Erro ao guardar. Verifique a sua conexão ou se ainda tem a sessão iniciada (login).");
+                }
                 hideLoader();
             }
         };
