@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Washington Barbalho | Bio Dinâmica e IA</title>
+    <title>Washington Barbalho | Catálogo Digital</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,14 +43,6 @@
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         #loader { transition: opacity 0.3s ease; }
         img { image-rendering: -webkit-optimize-contrast; }
-
-        /* Estilos do Chat da IA */
-        .chat-bubble-ai { background-color: #ffffff; border-radius: 16px 16px 16px 4px; color: #1f2937; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .chat-bubble-user { background-color: #10b981; border-radius: 16px 16px 4px 16px; color: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .typing-dot { animation: typing 1.4s infinite ease-in-out both; }
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
     </style>
 </head>
 <body class="text-gray-800 relative min-h-screen overflow-x-hidden">
@@ -82,7 +74,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE DETALHES DO PRODUTO -->
+    <!-- MODAL DE DETALHES DO PRODUTO (PÚBLICO) -->
     <div id="product-modal" class="fixed inset-0 bg-white z-[10005] hidden flex-col overflow-y-auto">
         <div class="sticky top-0 bg-white z-20 px-4 py-3 flex justify-between items-center border-b shadow-sm">
             <h2 id="modal-product-title" class="font-bold text-lg text-gray-900 line-clamp-1 pr-4">Nome do Produto</h2>
@@ -108,9 +100,7 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- MODAL DE CAPTAÇÃO DE LEADS (INTELIGENTE)   -->
-    <!-- ========================================== -->
+    <!-- MODAL DE CAPTAÇÃO DE LEADS (INTELIGENTE) -->
     <div id="lead-modal" class="fixed inset-0 bg-black/60 z-[10010] hidden items-center justify-center backdrop-blur-sm p-4">
         <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
@@ -148,52 +138,9 @@
 
 
     <!-- ========================================== -->
-    <!-- JANELA DE CHAT DA IA (TELA INTEIRA)        -->
-    <!-- ========================================== -->
-    <div id="ai-chat-window" class="fixed inset-0 bg-gray-100 z-[10005] flex-col transform translate-y-full transition-transform duration-300 ease-in-out hidden">
-        <div class="bg-emerald-500 text-white px-4 py-3 flex justify-between items-center shadow-md z-20">
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-full overflow-hidden border-2 border-white bg-white">
-                    <img id="chat-header-photo" src="" alt="Vendedor" class="w-full h-full object-cover">
-                </div>
-                <div>
-                    <h3 class="font-bold text-base leading-tight" id="chat-header-name">Vendedor</h3>
-                    <p class="text-[11px] opacity-90 leading-tight flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse"></span> Assistente Virtual (24h)
-                    </p>
-                </div>
-            </div>
-            <button onclick="toggleAiChat()" class="text-white bg-emerald-600 hover:bg-emerald-700 w-8 h-8 flex items-center justify-center rounded-full transition-colors shadow-sm">
-                <i class="ph-bold ph-x text-lg"></i>
-            </button>
-        </div>
-        
-        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-gray-50">
-            <div id="typing-indicator" class="hidden self-start">
-                <div class="chat-bubble-ai inline-flex items-center gap-1.5 px-4 py-3 h-10">
-                    <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div>
-                    <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div>
-                    <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="p-3 bg-white border-t border-gray-200 z-20 pb-safe">
-            <form onsubmit="handleChatSubmit(event)" class="flex gap-2 max-w-2xl mx-auto w-full">
-                <input type="text" id="chat-input" placeholder="Escreva a sua mensagem..." class="flex-1 bg-gray-100 border border-transparent focus:border-emerald-500 focus:bg-white focus:ring-1 focus:ring-emerald-500 rounded-full px-5 py-3 text-sm outline-none transition-all shadow-inner" autocomplete="off">
-                <button type="submit" id="chat-submit-btn" class="w-12 h-12 bg-emerald-500 text-white rounded-full flex items-center justify-center hover:bg-emerald-600 transition-colors shadow-md flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed">
-                    <i class="ph-fill ph-paper-plane-right text-xl"></i>
-                </button>
-            </form>
-            <div class="text-[10px] text-center text-gray-400 mt-2 font-medium">A IA atende 24h e pode cometer erros. Confirme as informações com o vendedor.</div>
-        </div>
-    </div>
-
-
-    <!-- ========================================== -->
     <!-- VISÃO 1: PÁGINA PÚBLICA (LINK NA BIO)      -->
     <!-- ========================================== -->
-    <div id="view-public" class="hidden pb-24">
+    <div id="view-public" class="hidden pb-12">
         
         <header class="relative w-full h-40 bg-brand-blue overflow-hidden dot-pattern">
             <div class="absolute -top-10 -right-10 w-48 h-48 bg-brand-cyan rounded-[3rem] opacity-90 transform rotate-12"></div>
@@ -220,7 +167,7 @@
                 <p id="pub-bio" class="text-gray-500 text-[14px] mt-2 leading-snug">Biografia...</p>
             </div>
 
-            <div class="flex gap-3 w-full justify-start mb-10 px-2">
+            <div class="flex gap-3 w-full justify-start mb-8 px-2">
                 <a id="pub-btn-whatsapp" href="#" class="bg-brand-blue hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg transition-transform hover:scale-105 cursor-pointer">
                     <i class="ph-fill ph-whatsapp-logo text-xl"></i> Fale comigo
                 </a>
@@ -229,33 +176,21 @@
                 </a>
             </div>
 
-            <div class="w-full mb-10">
-                <h3 class="text-xl font-bold text-gray-800 mb-5 px-2">O que procura?</h3>
+            <!-- OFERTAS DO DIA (AGORA É A PRIMEIRA SEÇÃO) -->
+            <div class="w-full mb-8 overflow-hidden" id="pub-offers-section">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 px-2">Ofertas em Destaque</h3>
+                <div id="pub-offers-container" class="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory hide-scroll px-2"></div>
+            </div>
+
+            <!-- CATEGORIAS -->
+            <div class="w-full mb-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 px-2">O que procura?</h3>
                 <div id="pub-categories" class="flex flex-col gap-3 px-2"></div>
             </div>
 
-            <div class="w-full mb-10 overflow-hidden" id="pub-offers-section">
-                <h3 class="text-xl font-bold text-gray-800 mb-5 px-2">Ofertas em Destaque</h3>
-                <div id="pub-offers-container" class="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory hide-scroll px-2"></div>
-            </div>
         </main>
 
-        <div id="pub-float-container" class="fixed bottom-6 left-0 right-0 z-40 justify-center sm:justify-end sm:px-6 px-4 pointer-events-none transition-opacity duration-300 flex">
-            <div class="relative pointer-events-auto">
-                <button id="pub-float-btn" onclick="toggleAiChat()" class="animate-pulse-soft bg-brand-blue hover:bg-blue-800 text-white rounded-full py-2.5 pl-2 pr-5 shadow-[0_8px_30px_rgb(30,64,175,0.4)] flex items-center gap-3 transition-transform hover:scale-105 border-2 border-white cursor-pointer">
-                    <div class="w-10 h-10 rounded-full overflow-hidden bg-white flex-shrink-0 border-2 border-white relative">
-                        <img id="pub-float-photo" src="" alt="Foto mini" class="w-full h-full object-cover">
-                        <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border border-white rounded-full"></div>
-                    </div>
-                    <div class="flex flex-col text-left">
-                        <span class="text-sm font-bold leading-tight">Estou online.</span>
-                        <span id="pub-float-sub" class="text-[11px] opacity-90 leading-tight">Assistente Virtual (24h)</span>
-                    </div>
-                </button>
-            </div>
-        </div>
-
-        <footer class="text-center pb-8 opacity-50 hover:opacity-100 transition-opacity">
+        <footer class="text-center pb-8 opacity-50 hover:opacity-100 transition-opacity mt-4">
             <button onclick="switchView('login')" class="text-xs text-gray-500 flex items-center justify-center gap-1 mx-auto bg-gray-200 px-3 py-1 rounded-full">
                 <i class="ph-fill ph-lock-key"></i> Painel do Vendedor
             </button>
@@ -277,7 +212,9 @@
                 </div>
             </div>
             <h2 class="text-2xl font-bold text-center text-gray-900 mb-2">Acesso Restrito</h2>
-            <p class="text-center text-sm text-gray-500 mb-8">Faça o login para editar a sua Bio</p>
+            <p class="text-center text-sm text-gray-500 mb-6">Faça o login para gerir o seu sistema</p>
+
+            <p id="login-error-msg" class="text-red-500 text-xs font-bold text-center mb-4 hidden bg-red-50 p-2 rounded"></p>
 
             <form id="login-form" onsubmit="loginAdmin(event)">
                 <div class="mb-4">
@@ -303,15 +240,16 @@
 
 
     <!-- ========================================== -->
-    <!-- VISÃO 3: PAINEL ADMINISTRATIVO             -->
+    <!-- VISÃO 3: PAINEL ADMINISTRATIVO (COM ABAS)  -->
     <!-- ========================================== -->
-    <div id="view-admin" class="hidden bg-gray-100 min-h-screen pb-20">
+    <div id="view-admin" class="hidden bg-gray-100 min-h-screen pb-20 flex-col">
+        <!-- HEADER FIXO -->
         <header class="bg-gray-900 text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center">
             <h1 class="font-bold text-base sm:text-lg flex items-center gap-2">
                 <i class="ph-fill ph-gear"></i> Painel
             </h1>
             <div class="flex gap-2">
-                <button onclick="switchView('public')" class="bg-gray-700 hover:bg-gray-600 p-2 rounded-lg text-sm transition-colors" title="Ver Bio">
+                <button onclick="switchView('public')" class="bg-gray-700 hover:bg-gray-600 p-2 rounded-lg text-sm transition-colors" title="Ver Link Público">
                     <i class="ph-bold ph-eye text-lg sm:text-xl"></i>
                 </button>
                 <button onclick="saveData()" class="bg-emerald-500 hover:bg-emerald-600 px-3 sm:px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-1.5 transition-colors shadow-lg">
@@ -323,8 +261,22 @@
             </div>
         </header>
 
-        <main class="max-w-2xl mx-auto p-4 flex flex-col gap-6 mt-2">
+        <!-- NAVEGAÇÃO DE ABAS -->
+        <div class="flex border-b bg-white sticky top-[68px] z-40 shadow-sm">
+            <button id="tab-btn-config" onclick="switchAdminTab('config')" class="flex-1 py-3 text-sm sm:text-base font-bold border-b-2 border-brand-blue text-brand-blue transition-colors">
+                Configurações
+            </button>
+            <button id="tab-btn-catalog" onclick="switchAdminTab('catalog')" class="flex-1 py-3 text-sm sm:text-base font-bold text-gray-400 border-b-2 border-transparent hover:text-gray-600 transition-colors flex items-center justify-center gap-2">
+                Produtos <span id="catalog-count-badge" class="bg-gray-200 text-gray-600 text-[10px] px-2 py-0.5 rounded-full">0</span>
+            </button>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- CONTEÚDO DA ABA 1: CONFIGURAÇÕES GERAIS        -->
+        <!-- ============================================== -->
+        <div id="tab-content-config" class="max-w-2xl mx-auto w-full p-4 flex flex-col gap-6 mt-2">
             
+            <!-- IDENTIDADE -->
             <section class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
                 <h2 class="font-bold text-brand-blue mb-4 flex items-center gap-2 border-b pb-2"><i class="ph-bold ph-image"></i> 1. Identidade Visual</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -345,6 +297,7 @@
                 </div>
             </section>
 
+            <!-- INFORMAÇÕES E HORÁRIOS -->
             <section class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
                 <h2 class="font-bold text-brand-blue mb-4 flex items-center gap-2 border-b pb-2"><i class="ph-bold ph-user"></i> 2. Informações e Contacto</h2>
                 <div class="grid gap-4">
@@ -374,8 +327,8 @@
                     </div>
 
                     <div class="border-t pt-4 mt-2">
-                        <h3 class="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="ph-fill ph-calendar-check"></i> Horários de Atendimento (Humano)</h3>
-                        <p class="text-[10px] text-gray-500 mb-3">Defina os dias e horários em que atende no WhatsApp. Desmarque o dia para informar que é folga.</p>
+                        <h3 class="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2"><i class="ph-fill ph-calendar-check"></i> Horários de Atendimento no WhatsApp</h3>
+                        <p class="text-[10px] text-gray-500 mb-3">Defina os dias e horários em que atende. Desmarque o dia para informar que é folga.</p>
                         
                         <div id="adm-schedule-container" class="space-y-2 mb-4">
                             <!-- Injetado dinamicamente -->
@@ -386,58 +339,43 @@
                             <input type="text" id="adm-time-obs" class="w-full border p-2 rounded-lg outline-none focus:border-brand-blue bg-gray-50" placeholder="Ex: Respondemos em até 10 minutos!">
                         </div>
                     </div>
-
                 </div>
             </section>
 
-            <section class="bg-emerald-50 p-5 rounded-2xl shadow-sm border border-emerald-200 relative overflow-hidden">
-                <i class="ph-fill ph-sparkle absolute -top-4 -right-4 text-emerald-200 text-6xl opacity-50"></i>
-                <div class="flex items-center justify-between mb-4 border-b border-emerald-200 pb-2 relative z-10">
-                    <h2 class="font-bold text-emerald-700 flex items-center gap-2"><i class="ph-bold ph-robot"></i> 3. Inteligência Artificial (24h)</h2>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="adm-ai-enabled" class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500 shadow-inner"></div>
-                    </label>
-                </div>
-                <div class="grid gap-4 relative z-10">
-                    <p class="text-xs text-emerald-800 bg-emerald-100 p-2 rounded-lg">A IA funciona 24 horas por dia, 7 dias por semana, não importa o seu horário de expediente.<br><br><b>Se ativada:</b> O botão flutuante aparecerá na tela a conectar o cliente ao Chat.<br><b>Se desativada:</b> O botão flutuante sumirá completamente do site.</p>
-                    <div>
-                        <label class="block text-xs font-bold text-emerald-700 mb-1">Tom de Voz da IA</label>
-                        <select id="adm-ai-tone" class="w-full border p-2 rounded-lg outline-none focus:border-emerald-500 bg-white">
-                            <option value="Amigável e acolhedor">Amigável e acolhedor</option>
-                            <option value="Persuasivo e focado em vendas">Persuasivo e focado em fecho de vendas</option>
-                            <option value="Profissional e corporativo">Profissional e objetivo</option>
-                            <option value="Descontraído e animado">Descontraído e animado</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-emerald-700 mb-1 flex justify-between">
-                            Instruções / Regras para a IA
-                        </label>
-                        <textarea id="adm-ai-inst" rows="4" class="w-full border p-2 rounded-lg outline-none focus:border-emerald-500 bg-white" placeholder="Ex: Tente pedir o nome do cliente logo no início. Ofereça prestações sem juros..."></textarea>
-                    </div>
-                </div>
-            </section>
-
+            <!-- CATEGORIAS -->
             <section class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
                 <div class="flex justify-between items-center mb-4 border-b pb-2">
-                    <h2 class="font-bold text-brand-blue flex items-center gap-2"><i class="ph-bold ph-tags"></i> 4. Produtos / Ofertas</h2>
-                    <button onclick="addOffer()" class="bg-brand-red text-white text-xs px-3 py-1.5 rounded-lg hover:bg-red-800 transition-colors font-bold">+ Adicionar Produto</button>
-                </div>
-                <div id="adm-offers-list" class="flex flex-col gap-6"></div>
-                <!-- Alerta extra para o utilizador saber que pode usar links -->
-                <p class="text-[10px] text-center text-gray-500 mt-2">Dica: Se quiser adicionar muitas imagens, opte por utilizar o botão <b>+ Link</b> para não consumir o armazenamento do sistema.</p>
-            </section>
-
-            <section class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
-                <div class="flex justify-between items-center mb-4 border-b pb-2">
-                    <h2 class="font-bold text-brand-blue flex items-center gap-2"><i class="ph-bold ph-list-dashes"></i> 5. Botões de Acesso Rápido</h2>
-                    <button onclick="addCategory()" class="bg-brand-blue text-white text-xs px-3 py-1.5 rounded-lg hover:bg-blue-800 transition-colors font-bold">+ Adicionar Botão</button>
+                    <h2 class="font-bold text-brand-blue flex items-center gap-2"><i class="ph-bold ph-list-dashes"></i> 3. Botões de Acesso (O que procura?)</h2>
+                    <button onclick="addCategory()" class="bg-brand-blue text-white text-xs px-3 py-1.5 rounded-lg hover:bg-blue-800 transition-colors font-bold shadow-sm">+ Adicionar Botão</button>
                 </div>
                 <div id="adm-categories-list" class="flex flex-col gap-4"></div>
             </section>
+        </div>
 
-        </main>
+        <!-- ============================================== -->
+        <!-- CONTEÚDO DA ABA 2: CATÁLOGO DE PRODUTOS        -->
+        <!-- ============================================== -->
+        <div id="tab-content-catalog" class="hidden max-w-2xl mx-auto w-full p-4 flex-col gap-4 mt-2">
+            
+            <!-- Barra de Busca Fixa da Aba -->
+            <div class="sticky top-[125px] z-30 bg-gray-100 pb-4 pt-1 rounded-t-xl">
+                <div class="flex gap-2 items-center">
+                    <div class="relative flex-1">
+                        <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                        <input type="text" id="catalog-search" onkeyup="filterCatalog()" placeholder="Buscar produto..." class="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:border-brand-blue shadow-sm text-sm">
+                    </div>
+                    <button onclick="addCatalogItem()" class="bg-brand-red text-white px-4 py-3 rounded-xl hover:bg-red-800 transition-colors font-bold shadow-md whitespace-nowrap flex items-center gap-1.5 text-sm">
+                        <i class="ph-bold ph-plus"></i> Novo
+                    </button>
+                </div>
+                <p class="text-[10px] text-gray-500 mt-2 px-1">Guarde todos os seus produtos aqui. Apenas os produtos com o interruptor <b>"Exibir no Link"</b> ligado irão aparecer na página do cliente.</p>
+            </div>
+
+            <!-- Lista de Produtos -->
+            <div id="adm-catalog-list" class="flex flex-col gap-6"></div>
+
+        </div>
+
     </div>
 
     <!-- SCRIPTS FIREBASE + LÓGICA DO SISTEMA -->
@@ -462,12 +400,6 @@
         
         let currentUser = null;
 
-        const apiKey = ""; 
-        const minhalChavePessoal = "AIzaSyC-WAY6ByCZNCUwSD2dLLxGmpC75ArAt_g"; 
-        
-        let aiChatHistory = []; 
-        let isChatOpen = false;
-
         let currentLeadContext = '';
         let currentLeadData = '';
 
@@ -475,7 +407,8 @@
             { id: 'device-mobile', name: '📱 Telemóvel' }, { id: 'television', name: '📺 TVs' },
             { id: 'plug', name: '🔌 Eletrodomésticos' }, { id: 'armchair', name: '🪑 Móveis' },
             { id: 'baby-carriage', name: '🍼 Infantil' }, { id: 'bicycle', name: '🚲 Bicicletas' },
-            { id: 'car', name: '🚗 Automóvel' }, { id: 'shopping-bag', name: '🛍️ Ofertas' }
+            { id: 'car', name: '🚗 Automóvel' }, { id: 'shopping-bag', name: '🛍️ Ofertas' },
+            { id: 'whatsapp-logo', name: '💬 WhatsApp' }, { id: 'link', name: '🔗 Link Útil' }
         ];
 
         let appData = {
@@ -484,12 +417,8 @@
             photoUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=300&auto=format&fit=crop",
             logoUrl: "https://placehold.co/150x150/ffffff/1e40af?text=LOGO",
             whatsapp: "88999990000", instagram: "seu_usuario",
-            offers: [], categories: [],
-            aiSettings: {
-                enabled: false,
-                tone: "Amigável e acolhedor",
-                instructions: "Cumprimente o cliente com entusiasmo. Mostre as vantagens de comprar consigo. Peça o nome dele para um atendimento personalizado."
-            },
+            catalog: [], 
+            categories: [],
             businessHours: {
                 "0": { active: false, start: "08:00", end: "12:00" }, 
                 "1": { active: true, start: "08:00", end: "18:00" },  
@@ -513,11 +442,19 @@
         });
 
         window.loginAdmin = async (e) => {
-            e.preventDefault(); showLoader();
+            e.preventDefault(); 
+            showLoader();
+            const errorMsg = document.getElementById('login-error-msg');
+            errorMsg.classList.add('hidden');
+            
             try {
                 await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-pass').value);
                 document.getElementById('login-email').value = ''; document.getElementById('login-pass').value = '';
-            } catch (error) { alert("Acesso Negado."); hideLoader(); }
+            } catch (error) { 
+                errorMsg.textContent = "Acesso Negado. Verifique os seus dados.";
+                errorMsg.classList.remove('hidden');
+                hideLoader(); 
+            }
         };
 
         window.logoutAdmin = async () => {
@@ -530,26 +467,24 @@
             onSnapshot(docRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    if(!data.offers) data.offers = [];
+                    
+                    if(data.offers && (!data.catalog || data.catalog.length === 0)) {
+                        data.catalog = data.offers.map(off => {
+                            if(off.imageUrl && !off.images) { off.images = [off.imageUrl]; delete off.imageUrl; }
+                            off.active = true; 
+                            return off;
+                        });
+                        delete data.offers;
+                    }
+                    
+                    if(!data.catalog) data.catalog = [];
                     if(!data.categories) data.categories = [];
-                    if(!data.aiSettings) data.aiSettings = appData.aiSettings;
                     
                     if(!data.businessHours) {
                         data.businessHours = appData.businessHours; 
                     } else if (data.businessHours.start !== undefined && data.businessHours["1"] === undefined) {
-                        const oldStart = data.businessHours.start;
-                        const oldEnd = data.businessHours.end;
-                        const oldObs = data.businessHours.obs;
-                        data.businessHours = {
-                            "0": { active: false, start: oldStart, end: oldEnd },
-                            "1": { active: true, start: oldStart, end: oldEnd },
-                            "2": { active: true, start: oldStart, end: oldEnd },
-                            "3": { active: true, start: oldStart, end: oldEnd },
-                            "4": { active: true, start: oldStart, end: oldEnd },
-                            "5": { active: true, start: oldStart, end: oldEnd },
-                            "6": { active: true, start: oldStart, end: oldEnd },
-                            obs: oldObs
-                        };
+                        const oldStart = data.businessHours.start; const oldEnd = data.businessHours.end; const oldObs = data.businessHours.obs;
+                        data.businessHours = { "0": { active: false, start: oldStart, end: oldEnd }, "1": { active: true, start: oldStart, end: oldEnd }, "2": { active: true, start: oldStart, end: oldEnd }, "3": { active: true, start: oldStart, end: oldEnd }, "4": { active: true, start: oldStart, end: oldEnd }, "5": { active: true, start: oldStart, end: oldEnd }, "6": { active: true, start: oldStart, end: oldEnd }, obs: oldObs };
                     }
                     appData = data;
                 }
@@ -581,6 +516,50 @@
             }, 300);
         };
 
+        // Lógica de Abas do Admin
+        window.switchAdminTab = (tab) => {
+            syncInputsToData(); // Salva estados pendentes antes de mudar
+            
+            const btnConfig = document.getElementById('tab-btn-config');
+            const btnCatalog = document.getElementById('tab-btn-catalog');
+            const contentConfig = document.getElementById('tab-content-config');
+            const contentCatalog = document.getElementById('tab-content-catalog');
+
+            if(tab === 'config') {
+                btnConfig.className = "flex-1 py-3 text-sm sm:text-base font-bold border-b-2 border-brand-blue text-brand-blue transition-colors";
+                btnCatalog.className = "flex-1 py-3 text-sm sm:text-base font-bold text-gray-400 border-b-2 border-transparent hover:text-gray-600 transition-colors flex items-center justify-center gap-2";
+                
+                contentConfig.classList.remove('hidden'); contentConfig.classList.add('flex');
+                contentCatalog.classList.add('hidden'); contentCatalog.classList.remove('flex');
+            } else {
+                btnCatalog.className = "flex-1 py-3 text-sm sm:text-base font-bold border-b-2 border-brand-blue text-brand-blue transition-colors flex items-center justify-center gap-2";
+                btnConfig.className = "flex-1 py-3 text-sm sm:text-base font-bold text-gray-400 border-b-2 border-transparent hover:text-gray-600 transition-colors";
+                
+                contentCatalog.classList.remove('hidden'); contentCatalog.classList.add('flex');
+                contentConfig.classList.add('hidden'); contentConfig.classList.remove('flex');
+            }
+        };
+
+        // Pesquisa Dinâmica do Catálogo
+        window.filterCatalog = () => {
+            const query = document.getElementById('catalog-search').value.toLowerCase();
+            const list = document.getElementById('adm-catalog-list');
+            const items = list.children;
+            
+            appData.catalog.forEach((item, index) => {
+                const domItem = items[index];
+                if (!domItem) return;
+                
+                const searchableText = `${item.title} ${item.subtitle} ${item.details} ${item.tag}`.toLowerCase();
+                
+                if (searchableText.includes(query)) {
+                    domItem.style.display = 'block';
+                } else {
+                    domItem.style.display = 'none';
+                }
+            });
+        };
+
         function showPublicView() {
             document.getElementById('view-admin').classList.add('hidden'); document.getElementById('view-login').classList.add('hidden');
             document.getElementById('view-public').classList.remove('hidden'); window.scrollTo(0, 0);
@@ -591,7 +570,9 @@
         }
         function showAdminView() {
             document.getElementById('view-public').classList.add('hidden'); document.getElementById('view-login').classList.add('hidden');
-            document.getElementById('view-login').classList.remove('flex'); document.getElementById('view-admin').classList.remove('hidden'); window.scrollTo(0, 0);
+            document.getElementById('view-login').classList.remove('flex'); document.getElementById('view-admin').classList.remove('hidden'); 
+            document.getElementById('view-admin').classList.add('flex'); // Precisa ser flex-col
+            window.scrollTo(0, 0);
         }
 
         window.openLeadModal = (context, data = '') => {
@@ -612,7 +593,7 @@
             } else if (context === 'category') {
                 subjectContainer.classList.add('hidden');
                 desc.textContent = `Ótima escolha! Para ver opções de ${data}, informe os seus dados.`;
-            } else if (context === 'offer') {
+            } else if (context === 'catalog') {
                 subjectContainer.classList.add('hidden');
                 desc.textContent = `Informe os seus dados para ver disponibilidade e valores de ${data}.`;
             }
@@ -628,7 +609,6 @@
             if (todaySchedule && todaySchedule.active) {
                 const startParts = (todaySchedule.start || "08:00").split(':');
                 const endParts = (todaySchedule.end || "18:00").split(':');
-                
                 const startMinutes = parseInt(startParts[0]) * 60 + parseInt(startParts[1]);
                 const endMinutes = parseInt(endParts[0]) * 60 + parseInt(endParts[1]);
 
@@ -648,16 +628,12 @@
             }
 
             const modal = document.getElementById('lead-modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
+            modal.classList.remove('hidden'); modal.classList.add('flex'); document.body.style.overflow = 'hidden';
         };
 
         window.closeLeadModal = () => {
             const modal = document.getElementById('lead-modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.body.style.overflow = 'auto';
+            modal.classList.add('hidden'); modal.classList.remove('flex'); document.body.style.overflow = 'auto';
         };
 
         window.submitLeadModal = () => {
@@ -668,221 +644,45 @@
 
             if (!name || !location) {
                 errorLabel.textContent = "Por favor, preencha o seu nome e localidade.";
-                errorLabel.classList.remove('hidden');
-                return;
+                errorLabel.classList.remove('hidden'); return;
             }
 
             if (currentLeadContext === 'main_wpp' && !subject) {
                 errorLabel.textContent = "Por favor, informe o que deseja.";
-                errorLabel.classList.remove('hidden');
-                return;
+                errorLabel.classList.remove('hidden'); return;
             }
-
             errorLabel.classList.add('hidden');
 
             let message = `Olá ${appData.name}! O meu nome é *${name}*, sou de *${location}*.\n\n`;
 
-            if (currentLeadContext === 'main_wpp') {
-                message += `*Desejo:* ${subject}`;
-            } else if (currentLeadContext === 'category') {
-                message += `Gostaria de ver opções e valores de *${currentLeadData}*.`;
-            } else if (currentLeadContext === 'offer') {
-                message += `Gostaria de saber mais detalhes e condições do produto: *${currentLeadData}*.`;
-            }
+            if (currentLeadContext === 'main_wpp') { message += `*Desejo:* ${subject}`; } 
+            else if (currentLeadContext === 'category') { message += `Gostaria de ver opções e valores de *${currentLeadData}*.`; } 
+            else if (currentLeadContext === 'catalog') { message += `Gostaria de saber mais detalhes e condições do produto: *${currentLeadData}*.`; }
 
             const waLink = `https://wa.me/55${appData.whatsapp}?text=${encodeURIComponent(message)}`;
             window.open(waLink, '_blank');
             closeLeadModal();
         };
 
-        window.toggleAiChat = () => {
-            const chatWindow = document.getElementById('ai-chat-window');
-            isChatOpen = !isChatOpen;
-            
-            if(isChatOpen) {
-                chatWindow.classList.remove('hidden');
-                chatWindow.classList.add('flex');
-                
-                requestAnimationFrame(() => {
-                    chatWindow.classList.remove('translate-y-full');
-                    chatWindow.classList.add('translate-y-0');
-                });
-                
-                document.body.style.overflow = 'hidden'; 
-                
-                document.getElementById('chat-header-photo').src = appData.photoUrl;
-                document.getElementById('chat-header-name').textContent = appData.name;
-
-                if(aiChatHistory.length === 0) {
-                    appendMessage("ai", `Olá! Sou o assistente virtual do(a) **${appData.name}**. Como posso ajudar hoje?`);
-                }
-                setTimeout(() => document.getElementById('chat-input').focus(), 300);
-            } else {
-                chatWindow.classList.remove('translate-y-0');
-                chatWindow.classList.add('translate-y-full');
-                document.body.style.overflow = 'auto'; 
-                
-                setTimeout(() => {
-                    if(!isChatOpen) {
-                        chatWindow.classList.remove('flex');
-                        chatWindow.classList.add('hidden');
-                    }
-                }, 300);
-            }
-        };
-
-        async function fetchWithRetry(url, options, maxRetries = 4) {
-            const delays = [1000, 2000, 4000, 8000]; 
-            let lastError;
-
-            for (let i = 0; i <= maxRetries; i++) {
-                try {
-                    const response = await fetch(url, options);
-
-                    if (response.ok) {
-                        return await response.json();
-                    }
-
-                    const errData = await response.json().catch(() => ({}));
-                    const errMsg = errData.error?.message || `HTTP ${response.status}`;
-                    lastError = new Error(errMsg);
-
-                    if (response.status >= 400 && response.status < 500 && response.status !== 429) {
-                        throw lastError; 
-                    }
-                } catch (error) {
-                    lastError = error;
-                    if (error.message.includes("API key") || error.message.includes("not found")) {
-                        throw error;
-                    }
-                }
-                if (i < maxRetries) {
-                    await new Promise(resolve => setTimeout(resolve, delays[i]));
-                }
-            }
-            throw lastError; 
-        }
-
-        window.handleChatSubmit = async (e) => {
-            e.preventDefault();
-            const inputEl = document.getElementById('chat-input');
-            const submitBtn = document.getElementById('chat-submit-btn');
-            const message = inputEl.value.trim();
-            if(!message) return;
-
-            inputEl.disabled = true; submitBtn.disabled = true;
-
-            appendMessage("user", message);
-            inputEl.value = '';
-
-            if (aiChatHistory.length > 0 && aiChatHistory[aiChatHistory.length - 1].role === "user") {
-                aiChatHistory.pop();
-            }
-            aiChatHistory.push({ role: "user", parts: [{ text: message }] });
-
-            document.getElementById('typing-indicator').classList.remove('hidden');
-            scrollToBottom();
-
-            const catalog = appData.offers.map(o => `- ${o.title}: ${o.subtitle}. Preço/Destaque: ${o.tag}. Detalhes: ${o.details || 'N/A'}`).join('\n');
-            const systemPrompt = `Você é um assistente virtual de vendas humanizado para atuar no chat da loja. 
-Seu nome é Assistente Virtual e você representa o vendedor: ${appData.name} (Cargo: ${appData.role}).
-Tom de voz da comunicação: ${appData.aiSettings.tone}.
-
-Instruções específicas do lojista: ${appData.aiSettings.instructions}
-
-INFORMAÇÕES DA LOJA PARA VOCÊ SE BASEAR (NÃO VENDER NADA FORA DESTA LISTA):
-Catálogo de Ofertas Disponíveis:
-${catalog || "Nenhuma oferta específica cadastrada no momento."}
-
-O WhatsApp oficial do vendedor para caso o cliente precise finalizar a compra ou pedir atendimento humano é: ${appData.whatsapp}.
-SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
-
-            try {
-                const dynamicApiKey = apiKey || (typeof __gemini_api_key !== 'undefined' ? __gemini_api_key : minhalChavePessoal);
-                
-                const isInternalTest = typeof __gemini_api_key !== 'undefined' && dynamicApiKey === __gemini_api_key;
-                const modelToUse = isInternalTest ? "gemini-2.5-flash-preview-09-2025" : "gemini-3-flash-preview";
-                
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelToUse}:generateContent`;
-                
-                const data = await fetchWithRetry(url, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'x-goog-api-key': dynamicApiKey 
-                    },
-                    body: JSON.stringify({
-                        contents: aiChatHistory,
-                        systemInstruction: { parts: [{ text: systemPrompt }] }
-                    })
-                });
-
-                const aiResponseText = data.candidates[0].content.parts[0].text;
-                
-                aiChatHistory.push({ role: "model", parts: [{ text: aiResponseText }] });
-                document.getElementById('typing-indicator').classList.add('hidden');
-                appendMessage("ai", aiResponseText);
-
-            } catch (error) {
-                document.getElementById('typing-indicator').classList.add('hidden');
-                
-                let fallbackMsg = "Desculpe, a ligação com a inteligência artificial falhou no momento.";
-                if(error.message.includes("API key not valid")) {
-                    fallbackMsg = "Aviso: A Chave da API (Gemini) está inválida ou restrita. Por favor, verifique as permissões no Google Cloud.";
-                } else if(error.message.includes("not found")) {
-                    fallbackMsg = "Aviso: O modelo configurado na chave de API não foi encontrado.";
-                } else if(error.message.toLowerCase().includes("high demand") || error.message.includes("503")) {
-                    fallbackMsg = "O sistema de IA está a passar por uma alta demanda e não pôde responder agora. Por favor, tente novamente em alguns instantes ou feche o chat para iniciar um atendimento humano!";
-                }
-                
-                appendMessage("ai", fallbackMsg);
-                aiChatHistory.pop();
-            } finally {
-                inputEl.disabled = false; submitBtn.disabled = false; inputEl.focus();
-            }
-        };
-
-        function appendMessage(sender, text) {
-            const chatMessages = document.getElementById('chat-messages');
-            const typingIndicator = document.getElementById('typing-indicator'); 
-            const div = document.createElement('div');
-            
-            const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-            if (sender === 'user') {
-                div.className = "self-end max-w-[85%] chat-bubble-user px-4 py-3 shadow-sm text-[15px]";
-                div.innerHTML = formattedText;
-            } else {
-                div.className = "self-start max-w-[85%] chat-bubble-ai px-4 py-3 shadow-sm text-[15px]";
-                div.innerHTML = formattedText;
-            }
-            chatMessages.insertBefore(div, typingIndicator);
-            scrollToBottom();
-        }
-
-        function scrollToBottom() {
-            const chatMessages = document.getElementById('chat-messages');
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
         window.openProductModal = (index) => {
-            const offer = appData.offers[index];
-            if(!offer) return;
+            // Garante que pega do catálogo geral, mesmo se a busca estiver ativa
+            const item = appData.catalog[index];
+            if(!item) return;
 
-            document.getElementById('modal-product-title').textContent = offer.title;
+            document.getElementById('modal-product-title').textContent = item.title;
             const imgContainer = document.getElementById('modal-product-img-container');
             imgContainer.innerHTML = '';
             
-            if (offer.images && offer.images.length > 0) {
-                offer.images.forEach(img => { imgContainer.innerHTML += `<img src="${img}" class="w-full h-full flex-shrink-0 snap-center object-contain p-2" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">`; });
+            if (item.images && item.images.length > 0) {
+                item.images.forEach(img => { imgContainer.innerHTML += `<img src="${img}" class="w-full h-full flex-shrink-0 snap-center object-contain p-2" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">`; });
                 const indicator = document.getElementById('modal-swipe-indicator');
-                if (offer.images.length > 1) indicator.classList.remove('hidden'); else indicator.classList.add('hidden');
+                if (item.images.length > 1) indicator.classList.remove('hidden'); else indicator.classList.add('hidden');
             } else {
                 imgContainer.innerHTML = `<img src="https://placehold.co/400x300?text=Sem+Imagem" class="w-full h-full flex-shrink-0 snap-center object-contain p-2">`;
                 document.getElementById('modal-swipe-indicator').classList.add('hidden');
             }
 
-            const detailsText = offer.details || "Nenhum detalhe informado para este produto.";
+            const detailsText = item.details || "Nenhum detalhe informado para este produto.";
             document.getElementById('modal-product-details').innerHTML = detailsText.replace(/\n/g, '<br>');
 
             const btnWpp = document.getElementById('modal-btn-wpp');
@@ -890,7 +690,7 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
             btnWpp.onclick = (e) => {
                 e.preventDefault();
                 closeProductModal(); 
-                openLeadModal('offer', offer.title); 
+                openLeadModal('catalog', item.title); 
             };
 
             const modalEl = document.getElementById('product-modal');
@@ -899,8 +699,7 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
         };
 
         window.closeProductModal = () => {
-            document.getElementById('product-modal').classList.add('hidden'); document.getElementById('product-modal').classList.remove('flex');
-            document.body.style.overflow = 'auto';
+            document.getElementById('product-modal').classList.add('hidden'); document.getElementById('product-modal').classList.remove('flex'); document.body.style.overflow = 'auto';
         };
 
         function renderPublicView() {
@@ -912,23 +711,48 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
             
             const btnWpp = document.getElementById('pub-btn-whatsapp');
             btnWpp.href = "#";
-            btnWpp.onclick = (e) => {
-                e.preventDefault();
-                openLeadModal('main_wpp');
-            };
-
+            btnWpp.onclick = (e) => { e.preventDefault(); openLeadModal('main_wpp'); };
             document.getElementById('pub-btn-insta').href = `https://instagram.com/${appData.instagram}`;
 
-            const floatContainer = document.getElementById('pub-float-container');
-            if(appData.aiSettings && appData.aiSettings.enabled) {
-                floatContainer.classList.remove('hidden'); 
-                floatContainer.classList.add('flex'); 
-                document.getElementById('pub-float-photo').src = appData.photoUrl; 
+            // Renderizar Ofertas ATIVAS (Agora vem antes)
+            const offersContainer = document.getElementById('pub-offers-container');
+            const offersSection = document.getElementById('pub-offers-section');
+            offersContainer.innerHTML = '';
+            
+            const activeOffers = appData.catalog.filter(item => item.active === true);
+            
+            if (activeOffers.length === 0) {
+                offersSection.style.display = 'none';
             } else {
-                floatContainer.classList.add('hidden');
-                floatContainer.classList.remove('flex');
+                offersSection.style.display = 'block';
+                appData.catalog.forEach((item, index) => {
+                    if(!item.active) return; 
+                    
+                    let imagesHtml = '';
+                    if(item.images && item.images.length > 0) {
+                        item.images.forEach(img => { imagesHtml += `<img src="${img}" class="w-full h-full flex-shrink-0 snap-center object-contain p-2" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">`; });
+                    } else { imagesHtml = `<img src="https://placehold.co/400x300?text=Sem+Imagem" class="w-full h-full flex-shrink-0 snap-center object-contain p-2">`; }
+
+                    const showSwipe = (item.images && item.images.length > 1) ? `<div class="absolute bottom-1 right-2 bg-black/30 text-white text-[9px] px-2 py-0.5 rounded-full pointer-events-none">Arraste ➔</div>` : '';
+
+                    const offerHTML = `
+                        <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col min-w-[85%] sm:min-w-[300px] w-72 snap-center shrink-0 h-[450px]">
+                            <div class="mb-2"><span class="bg-brand-red text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm uppercase tracking-wider inline-block">${item.tag || 'DESTAQUE'}</span></div>
+                            <h4 class="font-bold text-lg text-gray-900 mb-1 line-clamp-2 leading-tight h-12">${item.title}</h4>
+                            <p class="text-xs text-gray-500 mb-3 line-clamp-1">${item.subtitle}</p>
+                            <div class="w-full h-44 flex overflow-x-auto snap-x snap-mandatory hide-scroll mb-auto bg-gray-50 rounded-2xl relative border border-gray-100/50">
+                                ${imagesHtml} ${showSwipe}
+                            </div>
+                            <button onclick="openProductModal(${index})" class="w-full mt-4 block text-center bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-xl transition-colors text-sm shadow-md">
+                                Ver Detalhes
+                            </button>
+                        </div>
+                    `;
+                    offersContainer.insertAdjacentHTML('beforeend', offerHTML);
+                });
             }
 
+            // Renderizar Categorias (Agora vem depois)
             const catContainer = document.getElementById('pub-categories');
             catContainer.innerHTML = '';
             appData.categories.forEach(cat => {
@@ -951,45 +775,16 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
                 `;
                 catContainer.insertAdjacentHTML('beforeend', catHTML);
             });
-
-            const offersContainer = document.getElementById('pub-offers-container');
-            const offersSection = document.getElementById('pub-offers-section');
-            offersContainer.innerHTML = '';
-            
-            if (appData.offers.length === 0) {
-                offersSection.style.display = 'none';
-            } else {
-                offersSection.style.display = 'block';
-                appData.offers.forEach((offer, index) => {
-                    let imagesHtml = '';
-                    if(offer.images && offer.images.length > 0) {
-                        offer.images.forEach(img => { imagesHtml += `<img src="${img}" class="w-full h-full flex-shrink-0 snap-center object-contain p-2" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">`; });
-                    } else { imagesHtml = `<img src="https://placehold.co/400x300?text=Sem+Imagem" class="w-full h-full flex-shrink-0 snap-center object-contain p-2">`; }
-
-                    const showSwipe = (offer.images && offer.images.length > 1) ? `<div class="absolute bottom-1 right-2 bg-black/30 text-white text-[9px] px-2 py-0.5 rounded-full pointer-events-none">Arraste ➔</div>` : '';
-
-                    const offerHTML = `
-                        <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col min-w-[85%] sm:min-w-[300px] w-72 snap-center shrink-0 h-[450px]">
-                            <div class="mb-2"><span class="bg-brand-red text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm uppercase tracking-wider inline-block">${offer.tag || 'DESTAQUE'}</span></div>
-                            <h4 class="font-bold text-lg text-gray-900 mb-1 line-clamp-2 leading-tight h-12">${offer.title}</h4>
-                            <p class="text-xs text-gray-500 mb-3 line-clamp-1">${offer.subtitle}</p>
-                            <div class="w-full h-44 flex overflow-x-auto snap-x snap-mandatory hide-scroll mb-auto bg-gray-50 rounded-2xl relative border border-gray-100/50">
-                                ${imagesHtml} ${showSwipe}
-                            </div>
-                            <button onclick="openProductModal(${index})" class="w-full mt-4 block text-center bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-xl transition-colors text-sm shadow-md">
-                                Ver Detalhes
-                            </button>
-                        </div>
-                    `;
-                    offersContainer.insertAdjacentHTML('beforeend', offerHTML);
-                });
-            }
         }
 
         window.toggleDayTimes = (dayIndex) => {
             const isActive = document.getElementById(`adm-day-active-${dayIndex}`).checked;
             document.getElementById(`adm-day-start-${dayIndex}`).disabled = !isActive;
             document.getElementById(`adm-day-end-${dayIndex}`).disabled = !isActive;
+        };
+
+        window.toggleCatalogActive = (index) => {
+            appData.catalog[index].active = document.getElementById(`catalog-active-${index}`).checked;
         };
 
         function renderAdminView() {
@@ -1024,33 +819,30 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
 
             document.getElementById('adm-time-obs').value = appData.businessHours.obs || '';
 
-            document.getElementById('adm-ai-enabled').checked = appData.aiSettings.enabled;
-            document.getElementById('adm-ai-tone').value = appData.aiSettings.tone;
-            document.getElementById('adm-ai-inst').value = appData.aiSettings.instructions;
-
-            renderAdminOffers();
+            renderAdminCatalog();
             renderAdminCategories();
         }
 
-        function renderAdminOffers() {
-            const list = document.getElementById('adm-offers-list');
+        function renderAdminCatalog() {
+            const list = document.getElementById('adm-catalog-list');
             list.innerHTML = '';
+            document.getElementById('catalog-count-badge').textContent = appData.catalog.length;
             
-            appData.offers.forEach((offer, index) => {
+            appData.catalog.forEach((item, index) => {
                 const div = document.createElement('div');
-                div.className = "bg-gray-50 border border-gray-200 p-4 rounded-xl relative group shadow-sm";
+                div.className = `p-4 rounded-xl relative group shadow-sm border ${item.active ? 'bg-white border-green-200' : 'bg-gray-50 border-gray-200 opacity-80'}`;
                 
-                const upBtn = index > 0 ? `<button onclick="moveItem('offer', ${index}, -1)" class="p-1.5 bg-white text-gray-600 border rounded hover:bg-gray-200"><i class="ph-bold ph-caret-up"></i></button>` : `<div class="w-8"></div>`;
-                const downBtn = index < appData.offers.length - 1 ? `<button onclick="moveItem('offer', ${index}, 1)" class="p-1.5 bg-white text-gray-600 border rounded hover:bg-gray-200"><i class="ph-bold ph-caret-down"></i></button>` : `<div class="w-8"></div>`;
+                const upBtn = index > 0 ? `<button onclick="moveItem('catalog', ${index}, -1)" class="p-1.5 bg-white text-gray-600 border rounded hover:bg-gray-200"><i class="ph-bold ph-caret-up"></i></button>` : `<div class="w-8"></div>`;
+                const downBtn = index < appData.catalog.length - 1 ? `<button onclick="moveItem('catalog', ${index}, 1)" class="p-1.5 bg-white text-gray-600 border rounded hover:bg-gray-200"><i class="ph-bold ph-caret-down"></i></button>` : `<div class="w-8"></div>`;
                 
                 let imagesInputsHtml = '';
-                if(offer.images) {
-                    offer.images.forEach((img, imgIndex) => {
+                if(item.images) {
+                    item.images.forEach((img, imgIndex) => {
                         imagesInputsHtml += `
                             <div class="flex items-center gap-2 mb-2 bg-white p-1 border rounded-lg">
                                 <img src="${img}" class="w-10 h-10 object-contain rounded bg-gray-50 border" onerror="this.src='https://placehold.co/40x40?text=IMG'">
-                                <input type="text" id="offer-${index}-img-${imgIndex}" value="${img}" class="p-2 text-xs w-full outline-none focus:text-brand-blue" placeholder="Link URL da imagem">
-                                <button onclick="removeOfferImage(${index}, ${imgIndex})" class="p-2 text-red-500 hover:bg-red-50 rounded"><i class="ph-bold ph-x-circle"></i></button>
+                                <input type="text" id="catalog-${index}-img-${imgIndex}" value="${img}" class="p-2 text-xs w-full outline-none focus:text-brand-blue" placeholder="Link URL da imagem">
+                                <button onclick="removeCatalogImage(${index}, ${imgIndex})" class="p-2 text-red-500 hover:bg-red-50 rounded"><i class="ph-bold ph-x-circle"></i></button>
                             </div>
                         `;
                     });
@@ -1059,45 +851,54 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
                 div.innerHTML = `
                     <div class="absolute top-3 right-3 flex gap-1">
                         ${upBtn}${downBtn}
-                        <button onclick="openDeleteModal('offer', ${index})" class="p-1.5 bg-white text-red-500 border rounded hover:bg-red-50 ml-2 shadow-sm"><i class="ph-bold ph-trash"></i></button>
+                        <button onclick="openDeleteModal('catalog', ${index})" class="p-1.5 bg-white text-red-500 border rounded hover:bg-red-50 ml-2 shadow-sm"><i class="ph-bold ph-trash"></i></button>
                     </div>
-                    <div class="font-bold text-xs text-brand-red uppercase tracking-wider mb-3 bg-red-100 inline-block px-2 py-1 rounded">Produto #${index + 1}</div>
-                    <div class="grid grid-cols-2 gap-3 mb-3 pr-24">
+                    
+                    <div class="flex justify-between items-center mb-3 pr-24">
+                        <div class="font-bold text-xs text-brand-red uppercase tracking-wider bg-red-100 inline-block px-2 py-1 rounded">Produto #${index + 1}</div>
+                        <label class="relative inline-flex items-center cursor-pointer ml-3">
+                            <input type="checkbox" id="catalog-active-${index}" ${item.active ? 'checked' : ''} onchange="toggleCatalogActive(${index})" class="sr-only peer">
+                            <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                            <span class="ml-2 text-[10px] font-bold ${item.active ? 'text-emerald-600' : 'text-gray-500'}">Exibir no Link</span>
+                        </label>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 mb-3">
                         <div class="col-span-2 sm:col-span-1">
                             <label class="text-[10px] font-bold text-gray-500 uppercase">Nome / Título</label>
-                            <input type="text" id="offer-title-${index}" value="${offer.title}" class="border p-2 rounded text-sm w-full bg-white outline-none focus:border-brand-blue">
+                            <input type="text" id="catalog-title-${index}" value="${item.title}" class="border p-2 rounded text-sm w-full bg-white outline-none focus:border-brand-blue">
                         </div>
                         <div class="col-span-1">
                             <label class="text-[10px] font-bold text-gray-500 uppercase">Subtítulo</label>
-                            <input type="text" id="offer-sub-${index}" value="${offer.subtitle}" class="border p-2 rounded text-sm w-full bg-white outline-none focus:border-brand-blue">
+                            <input type="text" id="catalog-sub-${index}" value="${item.subtitle}" class="border p-2 rounded text-sm w-full bg-white outline-none focus:border-brand-blue">
                         </div>
                         <div class="col-span-1">
                             <label class="text-[10px] font-bold text-gray-500 uppercase">Etiqueta</label>
-                            <input type="text" id="offer-tag-${index}" value="${offer.tag || 'OFERTA'}" class="border p-2 rounded text-sm w-full bg-white outline-none focus:border-brand-blue">
+                            <input type="text" id="catalog-tag-${index}" value="${item.tag || 'OFERTA'}" class="border p-2 rounded text-sm w-full bg-white outline-none focus:border-brand-blue">
                         </div>
                     </div>
                     <div class="mb-3 bg-gray-100 p-3 rounded-xl border border-dashed border-gray-300">
                         <label class="text-[10px] font-bold text-gray-600 uppercase mb-2 flex items-center gap-1"><i class="ph-bold ph-images"></i> Imagens do Produto</label>
-                        <div id="offer-${index}-images-list" class="max-h-40 overflow-y-auto pr-1">
+                        <div id="catalog-${index}-images-list" class="max-h-40 overflow-y-auto pr-1">
                             ${imagesInputsHtml}
-                            ${(!offer.images || offer.images.length === 0) ? '<p class="text-[10px] text-gray-400 mb-2">Nenhuma imagem adicionada.</p>' : ''}
+                            ${(!item.images || item.images.length === 0) ? '<p class="text-[10px] text-gray-400 mb-2">Nenhuma imagem adicionada.</p>' : ''}
                         </div>
                         <div class="flex gap-2 mt-2">
-                            <button onclick="addOfferImageLink(${index})" class="text-[11px] font-bold bg-white border px-3 py-1.5 rounded-lg hover:bg-gray-50 shadow-sm">+ Link</button>
+                            <button onclick="addCatalogImageLink(${index})" class="text-[11px] font-bold bg-white border px-3 py-1.5 rounded-lg hover:bg-gray-50 shadow-sm">+ Link</button>
                             <label class="text-[11px] font-bold bg-brand-blue text-white px-3 py-1.5 rounded-lg hover:bg-blue-800 cursor-pointer text-center shadow-sm">
                                 + Upload
-                                <input type="file" accept="image/*" class="hidden" onchange="handleOfferImageUpload(event, ${index})">
+                                <input type="file" accept="image/*" class="hidden" onchange="handleCatalogImageUpload(event, ${index})">
                             </label>
                         </div>
                     </div>
                     <div>
                         <label class="text-[10px] font-bold text-gray-500 uppercase">Ficha Técnica / Detalhes</label>
-                        <textarea id="offer-details-${index}" rows="4" class="border p-2 rounded text-sm w-full bg-white outline-none focus:border-brand-blue mt-1" placeholder="Ex: Detalhes...">${offer.details || ''}</textarea>
+                        <textarea id="catalog-details-${index}" rows="4" class="border p-2 rounded text-sm w-full bg-white outline-none focus:border-brand-blue mt-1" placeholder="Ex: Detalhes...">${item.details || ''}</textarea>
                     </div>
                 `;
                 list.appendChild(div);
             });
-            if(appData.offers.length === 0) list.innerHTML = '<p class="text-xs text-center text-gray-400 py-4">Nenhum produto cadastrado.</p>';
+            if(appData.catalog.length === 0) list.innerHTML = '<p class="text-xs text-center text-gray-400 py-4">Catálogo vazio.</p>';
         }
 
         function renderAdminCategories() {
@@ -1138,18 +939,19 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
         }
 
         function syncInputsToData() {
-            for(let i = 0; i < appData.offers.length; i++) {
-                if(document.getElementById(`offer-title-${i}`)) {
-                    appData.offers[i].title = document.getElementById(`offer-title-${i}`).value;
-                    appData.offers[i].subtitle = document.getElementById(`offer-sub-${i}`).value;
-                    appData.offers[i].tag = document.getElementById(`offer-tag-${i}`).value;
-                    appData.offers[i].details = document.getElementById(`offer-details-${i}`).value;
+            for(let i = 0; i < appData.catalog.length; i++) {
+                if(document.getElementById(`catalog-title-${i}`)) {
+                    appData.catalog[i].active = document.getElementById(`catalog-active-${i}`).checked;
+                    appData.catalog[i].title = document.getElementById(`catalog-title-${i}`).value;
+                    appData.catalog[i].subtitle = document.getElementById(`catalog-sub-${i}`).value;
+                    appData.catalog[i].tag = document.getElementById(`catalog-tag-${i}`).value;
+                    appData.catalog[i].details = document.getElementById(`catalog-details-${i}`).value;
                     const newImages = [];
-                    for(let j = 0; j < appData.offers[i].images.length; j++) {
-                        const imgInput = document.getElementById(`offer-${i}-img-${j}`);
+                    for(let j = 0; j < appData.catalog[i].images.length; j++) {
+                        const imgInput = document.getElementById(`catalog-${i}-img-${j}`);
                         if(imgInput && imgInput.value.trim() !== '') newImages.push(imgInput.value.trim());
                     }
-                    appData.offers[i].images = newImages;
+                    appData.catalog[i].images = newImages;
                 }
             }
             for(let i = 0; i < appData.categories.length; i++) {
@@ -1160,9 +962,6 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
                     appData.categories[i].color = document.getElementById(`cat-color-${i}`).value;
                 }
             }
-            appData.aiSettings.enabled = document.getElementById('adm-ai-enabled').checked;
-            appData.aiSettings.tone = document.getElementById('adm-ai-tone').value;
-            appData.aiSettings.instructions = document.getElementById('adm-ai-inst').value;
 
             for(let i=0; i<7; i++) {
                 if(document.getElementById(`adm-day-active-${i}`)) {
@@ -1174,29 +973,39 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
             appData.businessHours.obs = document.getElementById('adm-time-obs').value;
         }
 
-        window.addOffer = () => { syncInputsToData(); appData.offers.unshift({ title: "", subtitle: "", tag: "Oferta", images: [], details: "" }); renderAdminOffers(); };
+        window.addCatalogItem = () => { syncInputsToData(); appData.catalog.unshift({ active: true, title: "", subtitle: "", tag: "Oferta", images: [], details: "" }); renderAdminCatalog(); };
         window.addCategory = () => { syncInputsToData(); appData.categories.push({ title: "", subtitle: "", icon: "device-mobile", color: "cyan" }); renderAdminCategories(); };
-        window.addOfferImageLink = (offerIndex) => { syncInputsToData(); appData.offers[offerIndex].images.push(''); renderAdminOffers(); };
-        window.removeOfferImage = (offerIndex, imgIndex) => { syncInputsToData(); appData.offers[offerIndex].images.splice(imgIndex, 1); renderAdminOffers(); };
-        window.moveItem = (type, index, direction) => { syncInputsToData(); const array = type === 'offer' ? appData.offers : appData.categories; if (direction === -1 && index > 0) { const temp = array[index]; array[index] = array[index - 1]; array[index - 1] = temp; } else if (direction === 1 && index < array.length - 1) { const temp = array[index]; array[index] = array[index + 1]; array[index + 1] = temp; } if(type === 'offer') renderAdminOffers(); else renderAdminCategories(); };
+        window.addCatalogImageLink = (index) => { syncInputsToData(); appData.catalog[index].images.push(''); renderAdminCatalog(); };
+        window.removeCatalogImage = (catIndex, imgIndex) => { syncInputsToData(); appData.catalog[catIndex].images.splice(imgIndex, 1); renderAdminCatalog(); };
+        
+        window.moveItem = (type, index, direction) => { 
+            syncInputsToData(); 
+            const array = type === 'catalog' ? appData.catalog : appData.categories; 
+            if (direction === -1 && index > 0) { const temp = array[index]; array[index] = array[index - 1]; array[index - 1] = temp; } 
+            else if (direction === 1 && index < array.length - 1) { const temp = array[index]; array[index] = array[index + 1]; array[index + 1] = temp; } 
+            if(type === 'catalog') renderAdminCatalog(); else renderAdminCategories(); 
+        };
         
         window.openDeleteModal = (type, index) => { syncInputsToData(); itemToDelete = { type, index }; document.getElementById('delete-modal').classList.remove('hidden'); };
         window.closeDeleteModal = () => { itemToDelete = null; document.getElementById('delete-modal').classList.add('hidden'); };
-        window.executeDelete = () => { if (itemToDelete) { if (itemToDelete.type === 'offer') appData.offers.splice(itemToDelete.index, 1); else if (itemToDelete.type === 'category') appData.categories.splice(itemToDelete.index, 1); if(itemToDelete.type === 'offer') renderAdminOffers(); else renderAdminCategories(); } closeDeleteModal(); };
+        window.executeDelete = () => { 
+            if (itemToDelete) { 
+                if (itemToDelete.type === 'catalog') appData.catalog.splice(itemToDelete.index, 1); 
+                else if (itemToDelete.type === 'category') appData.categories.splice(itemToDelete.index, 1); 
+                if(itemToDelete.type === 'catalog') renderAdminCatalog(); else renderAdminCategories(); 
+            } closeDeleteModal(); 
+        };
 
         window.handleImageUpload = (event, dataKey, previewId) => {
             const file = event.target.files[0]; if (!file) return;
             processImageUpload(file, (base64) => { appData[dataKey] = base64; document.getElementById(previewId).src = base64; });
         };
 
-        window.handleOfferImageUpload = (event, offerIndex) => {
+        window.handleCatalogImageUpload = (event, catIndex) => {
             const file = event.target.files[0]; if (!file) return;
-            processImageUpload(file, (base64) => { syncInputsToData(); appData.offers[offerIndex].images.push(base64); renderAdminOffers(); });
+            processImageUpload(file, (base64) => { syncInputsToData(); appData.catalog[catIndex].images.push(base64); renderAdminCatalog(); });
         };
 
-        // ==========================================
-        // COMPRESSÃO AGRESSIVA DE IMAGENS (CORREÇÃO DE LIMITE 1MB FIRESTORE)
-        // ==========================================
         function processImageUpload(file, callback) {
             showLoader();
             const reader = new FileReader();
@@ -1204,7 +1013,6 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
                 const img = new Image();
                 img.onload = () => {
                     const canvas = document.createElement('canvas'); 
-                    // Reduzido para 600px para garantir a compatibilidade com o limite de 1MB do Firestore
                     const MAX_SIZE = 600; 
                     let width = img.width; let height = img.height;
                     
@@ -1218,7 +1026,6 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
                     const ctx = canvas.getContext('2d'); 
                     ctx.drawImage(img, 0, 0, width, height);
                     
-                    // Compressão do JPEG para 70% (impercetível no ecrã, mas poupa muito espaço)
                     callback(canvas.toDataURL('image/jpeg', 0.7)); 
                     hideLoader();
                 }; 
@@ -1243,11 +1050,10 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
                 hideLoader();
             } catch (error) {
                 console.error(error);
-                // Nova mensagem de erro informando o limite de tamanho
                 if(error.code === 'resource-exhausted' || error.message.includes('payload') || error.message.includes('size')) {
-                    alert("Erro: O tamanho total das imagens ultrapassou o limite do banco de dados. Tente remover algumas imagens antigas ou use a opção '+ Link' em vez de Upload.");
+                    showToast("Erro: Limite de armazenamento excedido. Reduza as imagens.", true);
                 } else {
-                    alert("Erro ao guardar. Verifique a sua conexão ou se ainda tem a sessão iniciada (login).");
+                    showToast("Erro ao guardar. Verifique a sessão.", true);
                 }
                 hideLoader();
             }
@@ -1255,7 +1061,27 @@ SEJA SEMPRE CORDIAL, CURTO (mensagens curtas para chat) E FOCADO EM VENDAS.`;
 
         function showLoader() { document.getElementById('loader').style.display = 'flex'; setTimeout(() => document.getElementById('loader').style.opacity = '1', 10); }
         function hideLoader() { document.getElementById('loader').style.opacity = '0'; setTimeout(() => document.getElementById('loader').style.display = 'none', 300); }
-        function showToast(msg) { const toast = document.getElementById('toast'); document.getElementById('toast-msg').textContent = msg; toast.classList.remove('translate-x-full', 'opacity-0'); setTimeout(() => { toast.classList.add('translate-x-full', 'opacity-0'); }, 3000); }
+        
+        function showToast(msg, isError = false) { 
+            const toast = document.getElementById('toast'); 
+            const toastMsg = document.getElementById('toast-msg'); 
+            const icon = toast.querySelector('i');
+            
+            toastMsg.textContent = msg; 
+            
+            if (isError) {
+                toast.classList.remove('bg-green-500');
+                toast.classList.add('bg-red-500');
+                icon.className = 'ph-fill ph-warning-circle text-xl';
+            } else {
+                toast.classList.remove('bg-red-500');
+                toast.classList.add('bg-green-500');
+                icon.className = 'ph-fill ph-check-circle text-xl';
+            }
+
+            toast.classList.remove('translate-x-full', 'opacity-0'); 
+            setTimeout(() => { toast.classList.add('translate-x-full', 'opacity-0'); }, 4000); 
+        }
 
         loadDataFromFirebase();
     </script>
