@@ -176,7 +176,7 @@
                 </a>
             </div>
 
-            <!-- OFERTAS DO DIA (AGORA É A PRIMEIRA SEÇÃO) -->
+            <!-- OFERTAS DO DIA -->
             <div class="w-full mb-8 overflow-hidden" id="pub-offers-section">
                 <h3 class="text-xl font-bold text-gray-800 mb-4 px-2">Ofertas em Destaque</h3>
                 <div id="pub-offers-container" class="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory hide-scroll px-2"></div>
@@ -212,7 +212,7 @@
                 </div>
             </div>
             <h2 class="text-2xl font-bold text-center text-gray-900 mb-2">Acesso Restrito</h2>
-            <p class="text-center text-sm text-gray-500 mb-6">Faça o login para gerir o seu sistema</p>
+            <p class="text-center text-sm text-gray-500 mb-6">Faça o login para editar a sua Bio</p>
 
             <p id="login-error-msg" class="text-red-500 text-xs font-bold text-center mb-4 hidden bg-red-50 p-2 rounded"></p>
 
@@ -518,7 +518,7 @@
 
         // Lógica de Abas do Admin
         window.switchAdminTab = (tab) => {
-            syncInputsToData(); // Salva estados pendentes antes de mudar
+            syncInputsToData(); 
             
             const btnConfig = document.getElementById('tab-btn-config');
             const btnCatalog = document.getElementById('tab-btn-catalog');
@@ -571,7 +571,7 @@
         function showAdminView() {
             document.getElementById('view-public').classList.add('hidden'); document.getElementById('view-login').classList.add('hidden');
             document.getElementById('view-login').classList.remove('flex'); document.getElementById('view-admin').classList.remove('hidden'); 
-            document.getElementById('view-admin').classList.add('flex'); // Precisa ser flex-col
+            document.getElementById('view-admin').classList.add('flex'); 
             window.scrollTo(0, 0);
         }
 
@@ -665,7 +665,6 @@
         };
 
         window.openProductModal = (index) => {
-            // Garante que pega do catálogo geral, mesmo se a busca estiver ativa
             const item = appData.catalog[index];
             if(!item) return;
 
@@ -702,6 +701,7 @@
             document.getElementById('product-modal').classList.add('hidden'); document.getElementById('product-modal').classList.remove('flex'); document.body.style.overflow = 'auto';
         };
 
+        // RENDERIZAÇÃO DA PÁGINA PÚBLICA
         function renderPublicView() {
             document.getElementById('pub-name').textContent = appData.name || '';
             document.getElementById('pub-role').textContent = appData.role || '';
@@ -714,7 +714,7 @@
             btnWpp.onclick = (e) => { e.preventDefault(); openLeadModal('main_wpp'); };
             document.getElementById('pub-btn-insta').href = `https://instagram.com/${appData.instagram}`;
 
-            // Renderizar Ofertas ATIVAS (Agora vem antes)
+            // Renderizar Ofertas ATIVAS
             const offersContainer = document.getElementById('pub-offers-container');
             const offersSection = document.getElementById('pub-offers-section');
             offersContainer.innerHTML = '';
@@ -725,6 +725,7 @@
                 offersSection.style.display = 'none';
             } else {
                 offersSection.style.display = 'block';
+                // Correção visual do espaçamento da imagem (h-auto em vez de altura fixa)
                 appData.catalog.forEach((item, index) => {
                     if(!item.active) return; 
                     
@@ -736,14 +737,14 @@
                     const showSwipe = (item.images && item.images.length > 1) ? `<div class="absolute bottom-1 right-2 bg-black/30 text-white text-[9px] px-2 py-0.5 rounded-full pointer-events-none">Arraste ➔</div>` : '';
 
                     const offerHTML = `
-                        <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col min-w-[85%] sm:min-w-[300px] w-72 snap-center shrink-0 h-[450px]">
+                        <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col min-w-[85%] sm:min-w-[300px] w-72 snap-center shrink-0 h-auto">
                             <div class="mb-2"><span class="bg-brand-red text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm uppercase tracking-wider inline-block">${item.tag || 'DESTAQUE'}</span></div>
                             <h4 class="font-bold text-lg text-gray-900 mb-1 line-clamp-2 leading-tight h-12">${item.title}</h4>
                             <p class="text-xs text-gray-500 mb-3 line-clamp-1">${item.subtitle}</p>
-                            <div class="w-full h-44 flex overflow-x-auto snap-x snap-mandatory hide-scroll mb-auto bg-gray-50 rounded-2xl relative border border-gray-100/50">
+                            <div class="w-full h-44 flex overflow-x-auto snap-x snap-mandatory hide-scroll bg-gray-50 rounded-2xl relative border border-gray-100/50 mb-1">
                                 ${imagesHtml} ${showSwipe}
                             </div>
-                            <button onclick="openProductModal(${index})" class="w-full mt-4 block text-center bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-xl transition-colors text-sm shadow-md">
+                            <button onclick="openProductModal(${index})" class="w-full mt-5 block text-center bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-xl transition-colors text-sm shadow-md mt-auto">
                                 Ver Detalhes
                             </button>
                         </div>
@@ -752,7 +753,7 @@
                 });
             }
 
-            // Renderizar Categorias (Agora vem depois)
+            // Renderizar Categorias
             const catContainer = document.getElementById('pub-categories');
             catContainer.innerHTML = '';
             appData.categories.forEach(cat => {
@@ -856,6 +857,7 @@
                     
                     <div class="flex justify-between items-center mb-3 pr-24">
                         <div class="font-bold text-xs text-brand-red uppercase tracking-wider bg-red-100 inline-block px-2 py-1 rounded">Produto #${index + 1}</div>
+                        
                         <label class="relative inline-flex items-center cursor-pointer ml-3">
                             <input type="checkbox" id="catalog-active-${index}" ${item.active ? 'checked' : ''} onchange="toggleCatalogActive(${index})" class="sr-only peer">
                             <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
@@ -1086,4 +1088,4 @@
         loadDataFromFirebase();
     </script>
 </body>
-</html>
+    </html>
