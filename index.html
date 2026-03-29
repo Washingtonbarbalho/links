@@ -5,15 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Washington Barbalho | Catálogo Digital</title>
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -41,25 +38,26 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Regra rigorosa para parar a rolagem numa foto de cada vez */
+        .snap-always { scroll-snap-stop: always; }
+        
         #loader { transition: opacity 0.3s ease; }
         img { image-rendering: -webkit-optimize-contrast; }
     </style>
 </head>
 <body class="text-gray-800 relative min-h-screen overflow-x-hidden">
 
-    <!-- LOADER -->
     <div id="loader" class="fixed inset-0 bg-white z-[9999] flex-col items-center justify-center" style="display: none; opacity: 0;">
         <div class="w-12 h-12 border-4 border-brand-blue border-t-brand-cyan rounded-full animate-spin"></div>
         <p class="mt-4 text-brand-blue font-bold animate-pulse">A carregar...</p>
     </div>
 
-    <!-- TOAST NOTIFICATION -->
     <div id="toast" class="fixed top-5 right-5 transform translate-x-full opacity-0 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 z-[10000] flex items-center gap-2">
         <i class="ph-fill ph-check-circle text-xl"></i>
         <span id="toast-msg">Guardado com sucesso!</span>
     </div>
 
-    <!-- MODAL DE EXCLUSÃO -->
     <div id="delete-modal" class="fixed inset-0 bg-black/60 z-[10001] hidden flex items-center justify-center backdrop-blur-sm transition-opacity">
         <div class="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
             <div class="flex items-center gap-3 mb-4">
@@ -74,7 +72,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE DETALHES DO PRODUTO (PÚBLICO) -->
     <div id="product-modal" class="fixed inset-0 bg-white z-[10005] hidden flex-col overflow-y-auto">
         <div class="sticky top-0 bg-white z-20 px-4 py-3 flex justify-between items-center border-b shadow-sm">
             <h2 id="modal-product-title" class="font-bold text-lg text-gray-900 line-clamp-1 pr-4">Nome do Produto</h2>
@@ -100,7 +97,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE CAPTAÇÃO DE LEADS (INTELIGENTE) -->
     <div id="lead-modal" class="fixed inset-0 bg-black/60 z-[10010] hidden items-center justify-center backdrop-blur-sm p-4">
         <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
@@ -137,9 +133,6 @@
     </div>
 
 
-    <!-- ========================================== -->
-    <!-- VISÃO 1: PÁGINA PÚBLICA (LINK NA BIO)      -->
-    <!-- ========================================== -->
     <div id="view-public" class="hidden pb-12">
         
         <header class="relative w-full h-40 bg-brand-blue overflow-hidden dot-pattern">
@@ -176,13 +169,13 @@
                 </a>
             </div>
 
-            <!-- OFERTAS DO DIA -->
-            <div class="w-full mb-8 overflow-hidden" id="pub-offers-section">
+            <div class="w-full mb-8" id="pub-offers-section">
                 <h3 class="text-xl font-bold text-gray-800 mb-4 px-2">Ofertas em Destaque</h3>
-                <div id="pub-offers-container" class="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory hide-scroll px-2"></div>
+                <div id="pub-offers-container" class="grid grid-cols-1 sm:grid-cols-2 gap-6 px-2 pb-2"></div>
+                
+                <div id="pub-pagination-container" class="mt-8 mb-4 flex justify-center items-center gap-2" style="display: none;"></div>
             </div>
 
-            <!-- CATEGORIAS -->
             <div class="w-full mb-8">
                 <h3 class="text-xl font-bold text-gray-800 mb-4 px-2">O que procura?</h3>
                 <div id="pub-categories" class="flex flex-col gap-3 px-2"></div>
@@ -198,9 +191,6 @@
     </div>
 
 
-    <!-- ========================================== -->
-    <!-- VISÃO 2: TELA DE LOGIN                     -->
-    <!-- ========================================== -->
     <div id="view-login" class="hidden min-h-screen bg-gray-50 flex-col items-center justify-center px-4">
         <div class="max-w-sm w-full bg-white p-8 rounded-3xl shadow-xl border border-gray-100 relative">
             <button onclick="switchView('public')" class="absolute top-4 left-4 text-gray-400 hover:text-gray-800 p-2">
@@ -212,7 +202,7 @@
                 </div>
             </div>
             <h2 class="text-2xl font-bold text-center text-gray-900 mb-2">Acesso Restrito</h2>
-            <p class="text-center text-sm text-gray-500 mb-6">Faça o login para editar a sua Bio</p>
+            <p class="text-center text-sm text-gray-500 mb-6">Faça o login para gerir o seu sistema</p>
 
             <p id="login-error-msg" class="text-red-500 text-xs font-bold text-center mb-4 hidden bg-red-50 p-2 rounded"></p>
 
@@ -239,11 +229,7 @@
     </div>
 
 
-    <!-- ========================================== -->
-    <!-- VISÃO 3: PAINEL ADMINISTRATIVO (COM ABAS)  -->
-    <!-- ========================================== -->
     <div id="view-admin" class="hidden bg-gray-100 min-h-screen pb-20 flex-col">
-        <!-- HEADER FIXO -->
         <header class="bg-gray-900 text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center">
             <h1 class="font-bold text-base sm:text-lg flex items-center gap-2">
                 <i class="ph-fill ph-gear"></i> Painel
@@ -261,7 +247,6 @@
             </div>
         </header>
 
-        <!-- NAVEGAÇÃO DE ABAS -->
         <div class="flex border-b bg-white sticky top-[68px] z-40 shadow-sm">
             <button id="tab-btn-config" onclick="switchAdminTab('config')" class="flex-1 py-3 text-sm sm:text-base font-bold border-b-2 border-brand-blue text-brand-blue transition-colors">
                 Configurações
@@ -271,12 +256,8 @@
             </button>
         </div>
 
-        <!-- ============================================== -->
-        <!-- CONTEÚDO DA ABA 1: CONFIGURAÇÕES GERAIS        -->
-        <!-- ============================================== -->
         <div id="tab-content-config" class="max-w-2xl mx-auto w-full p-4 flex flex-col gap-6 mt-2">
             
-            <!-- IDENTIDADE -->
             <section class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
                 <h2 class="font-bold text-brand-blue mb-4 flex items-center gap-2 border-b pb-2"><i class="ph-bold ph-image"></i> 1. Identidade Visual</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -297,7 +278,6 @@
                 </div>
             </section>
 
-            <!-- INFORMAÇÕES E HORÁRIOS -->
             <section class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
                 <h2 class="font-bold text-brand-blue mb-4 flex items-center gap-2 border-b pb-2"><i class="ph-bold ph-user"></i> 2. Informações e Contacto</h2>
                 <div class="grid gap-4">
@@ -331,8 +311,7 @@
                         <p class="text-[10px] text-gray-500 mb-3">Defina os dias e horários em que atende. Desmarque o dia para informar que é folga.</p>
                         
                         <div id="adm-schedule-container" class="space-y-2 mb-4">
-                            <!-- Injetado dinamicamente -->
-                        </div>
+                            </div>
                         
                         <div>
                             <label class="block text-xs font-bold text-gray-500 mb-1">Observação (Exibida durante o expediente)</label>
@@ -342,7 +321,6 @@
                 </div>
             </section>
 
-            <!-- CATEGORIAS -->
             <section class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
                 <div class="flex justify-between items-center mb-4 border-b pb-2">
                     <h2 class="font-bold text-brand-blue flex items-center gap-2"><i class="ph-bold ph-list-dashes"></i> 3. Botões de Acesso (O que procura?)</h2>
@@ -352,12 +330,8 @@
             </section>
         </div>
 
-        <!-- ============================================== -->
-        <!-- CONTEÚDO DA ABA 2: CATÁLOGO DE PRODUTOS        -->
-        <!-- ============================================== -->
         <div id="tab-content-catalog" class="hidden max-w-2xl mx-auto w-full p-4 flex-col gap-4 mt-2">
             
-            <!-- Barra de Busca Fixa da Aba -->
             <div class="sticky top-[125px] z-30 bg-gray-100 pb-4 pt-1 rounded-t-xl">
                 <div class="flex gap-2 items-center">
                     <div class="relative flex-1">
@@ -371,14 +345,12 @@
                 <p class="text-[10px] text-gray-500 mt-2 px-1">Guarde todos os seus produtos aqui. Apenas os produtos com o interruptor <b>"Exibir no Link"</b> ligado irão aparecer na página do cliente.</p>
             </div>
 
-            <!-- Lista de Produtos -->
             <div id="adm-catalog-list" class="flex flex-col gap-6"></div>
 
         </div>
 
     </div>
 
-    <!-- SCRIPTS FIREBASE + LÓGICA DO SISTEMA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -402,6 +374,10 @@
 
         let currentLeadContext = '';
         let currentLeadData = '';
+
+        // Controlo de Paginação
+        let currentPage = 1;
+        const itemsPerPage = 10;
 
         const availableIcons = [
             { id: 'device-mobile', name: '📱 Telemóvel' }, { id: 'television', name: '📺 TVs' },
@@ -516,7 +492,6 @@
             }, 300);
         };
 
-        // Lógica de Abas do Admin
         window.switchAdminTab = (tab) => {
             syncInputsToData(); 
             
@@ -540,7 +515,6 @@
             }
         };
 
-        // Pesquisa Dinâmica do Catálogo
         window.filterCatalog = () => {
             const query = document.getElementById('catalog-search').value.toLowerCase();
             const list = document.getElementById('adm-catalog-list');
@@ -673,11 +647,14 @@
             imgContainer.innerHTML = '';
             
             if (item.images && item.images.length > 0) {
-                item.images.forEach(img => { imgContainer.innerHTML += `<img src="${img}" class="w-full h-full flex-shrink-0 snap-center object-contain p-2" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">`; });
+                item.images.forEach(img => { 
+                    // Adicionada a classe 'snap-always' para garantir a paragem suave ao rolar
+                    imgContainer.innerHTML += `<img src="${img}" class="w-full h-full flex-shrink-0 snap-center snap-always object-contain p-2" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">`; 
+                });
                 const indicator = document.getElementById('modal-swipe-indicator');
                 if (item.images.length > 1) indicator.classList.remove('hidden'); else indicator.classList.add('hidden');
             } else {
-                imgContainer.innerHTML = `<img src="https://placehold.co/400x300?text=Sem+Imagem" class="w-full h-full flex-shrink-0 snap-center object-contain p-2">`;
+                imgContainer.innerHTML = `<img src="https://placehold.co/400x300?text=Sem+Imagem" class="w-full h-full flex-shrink-0 snap-center snap-always object-contain p-2">`;
                 document.getElementById('modal-swipe-indicator').classList.add('hidden');
             }
 
@@ -701,7 +678,72 @@
             document.getElementById('product-modal').classList.add('hidden'); document.getElementById('product-modal').classList.remove('flex'); document.body.style.overflow = 'auto';
         };
 
-        // RENDERIZAÇÃO DA PÁGINA PÚBLICA
+        // ==========================================
+        // LÓGICA DE PAGINAÇÃO PÚBLICA
+        // ==========================================
+        window.changePage = (page) => {
+            currentPage = page;
+            renderPublicView();
+            document.getElementById('pub-offers-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            window.togglePagesModal(true); // Fecha a nuvem se estiver aberta
+        };
+
+        window.togglePagesModal = (forceClose = false) => {
+            const popover = document.getElementById('pages-popover');
+            if (popover) {
+                if (forceClose) {
+                    popover.classList.add('hidden');
+                } else {
+                    popover.classList.toggle('hidden');
+                }
+            }
+        };
+
+        function renderPaginationControls(totalPages) {
+            const container = document.getElementById('pub-pagination-container');
+            if (totalPages <= 1) {
+                container.style.display = 'none';
+                return;
+            }
+            
+            container.style.display = 'flex';
+            let html = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                if (i <= 3) {
+                    const active = currentPage === i ? 'bg-brand-blue text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50';
+                    html += `<button onclick="changePage(${i})" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full font-bold shadow-sm transition-colors ${active}">${i}</button>`;
+                } else if (i === 4 && totalPages > 4) {
+                    const isHiddenPageActive = currentPage > 3 && currentPage < totalPages;
+                    const active = isHiddenPageActive ? 'bg-brand-blue text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50';
+                    
+                    html += `
+                        <div class="relative inline-block">
+                            <button onclick="togglePagesModal()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full font-bold shadow-sm transition-colors ${active}">...</button>
+                            <div id="pages-popover" class="hidden absolute bottom-[120%] left-1/2 transform -translate-x-1/2 bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-gray-100 p-4 grid grid-cols-3 sm:grid-cols-4 gap-2 z-50 w-max origin-bottom transition-all">
+                                <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-white border-b border-r border-gray-100 rotate-45"></div>
+                                </div>
+                        </div>
+                    `;
+                } else if (i === totalPages && totalPages > 3) {
+                    const active = currentPage === totalPages ? 'bg-brand-blue text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50';
+                    html += `<button onclick="changePage(${i})" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full font-bold shadow-sm transition-colors ${active}">${i}</button>`;
+                }
+            }
+            container.innerHTML = html;
+
+            // Injeta as páginas escondidas dentro da nuvem de diálogo
+            if (totalPages > 4) {
+                const popover = document.getElementById('pages-popover');
+                let popoverHtml = '<div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-white border-b border-r border-gray-100 rotate-45"></div>';
+                for(let i = 4; i < totalPages; i++) {
+                    const active = currentPage === i ? 'bg-brand-blue text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200';
+                    popoverHtml += `<button onclick="changePage(${i})" class="w-10 h-10 rounded-xl font-bold text-sm transition-colors relative z-10 shadow-sm ${active}">${i}</button>`;
+                }
+                popover.innerHTML = popoverHtml;
+            }
+        }
+
         function renderPublicView() {
             document.getElementById('pub-name').textContent = appData.name || '';
             document.getElementById('pub-role').textContent = appData.role || '';
@@ -714,46 +756,55 @@
             btnWpp.onclick = (e) => { e.preventDefault(); openLeadModal('main_wpp'); };
             document.getElementById('pub-btn-insta').href = `https://instagram.com/${appData.instagram}`;
 
-            // Renderizar Ofertas ATIVAS
             const offersContainer = document.getElementById('pub-offers-container');
             const offersSection = document.getElementById('pub-offers-section');
             offersContainer.innerHTML = '';
             
-            const activeOffers = appData.catalog.filter(item => item.active === true);
+            // Lógica de Paginação
+            const activeOffers = appData.catalog
+                .map((item, index) => ({ ...item, originalIndex: index })) // Preserva o índice original do catálogo para o Modal
+                .filter(item => item.active === true);
+            
+            const totalPages = Math.ceil(activeOffers.length / itemsPerPage);
+            if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
             
             if (activeOffers.length === 0) {
                 offersSection.style.display = 'none';
             } else {
                 offersSection.style.display = 'block';
-                // Correção visual do espaçamento da imagem (h-auto em vez de altura fixa)
-                appData.catalog.forEach((item, index) => {
-                    if(!item.active) return; 
-                    
+                
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const pageOffers = activeOffers.slice(startIndex, startIndex + itemsPerPage);
+
+                pageOffers.forEach((item) => {
                     let imagesHtml = '';
                     if(item.images && item.images.length > 0) {
-                        item.images.forEach(img => { imagesHtml += `<img src="${img}" class="w-full h-full flex-shrink-0 snap-center object-contain p-2" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">`; });
-                    } else { imagesHtml = `<img src="https://placehold.co/400x300?text=Sem+Imagem" class="w-full h-full flex-shrink-0 snap-center object-contain p-2">`; }
+                        item.images.forEach(img => { 
+                            imagesHtml += `<img src="${img}" class="w-full h-full flex-shrink-0 snap-center snap-always object-contain p-2" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">`; 
+                        });
+                    } else { imagesHtml = `<img src="https://placehold.co/400x300?text=Sem+Imagem" class="w-full h-full flex-shrink-0 snap-center snap-always object-contain p-2">`; }
 
                     const showSwipe = (item.images && item.images.length > 1) ? `<div class="absolute bottom-1 right-2 bg-black/30 text-white text-[9px] px-2 py-0.5 rounded-full pointer-events-none">Arraste ➔</div>` : '';
 
                     const offerHTML = `
-                        <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col min-w-[85%] sm:min-w-[300px] w-72 snap-center shrink-0 h-auto">
+                        <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 flex flex-col w-full h-full">
                             <div class="mb-2"><span class="bg-brand-red text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm uppercase tracking-wider inline-block">${item.tag || 'DESTAQUE'}</span></div>
                             <h4 class="font-bold text-lg text-gray-900 mb-1 line-clamp-2 leading-tight h-12">${item.title}</h4>
                             <p class="text-xs text-gray-500 mb-3 line-clamp-1">${item.subtitle}</p>
                             <div class="w-full h-44 flex overflow-x-auto snap-x snap-mandatory hide-scroll bg-gray-50 rounded-2xl relative border border-gray-100/50 mb-1">
                                 ${imagesHtml} ${showSwipe}
                             </div>
-                            <button onclick="openProductModal(${index})" class="w-full mt-5 block text-center bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-xl transition-colors text-sm shadow-md mt-auto">
+                            <button onclick="openProductModal(${item.originalIndex})" class="w-full mt-5 block text-center bg-gray-900 hover:bg-black text-white font-semibold py-3 rounded-xl transition-colors text-sm shadow-md mt-auto">
                                 Ver Detalhes
                             </button>
                         </div>
                     `;
                     offersContainer.insertAdjacentHTML('beforeend', offerHTML);
                 });
+
+                renderPaginationControls(totalPages);
             }
 
-            // Renderizar Categorias
             const catContainer = document.getElementById('pub-categories');
             catContainer.innerHTML = '';
             appData.categories.forEach(cat => {
@@ -857,7 +908,6 @@
                     
                     <div class="flex justify-between items-center mb-3 pr-24">
                         <div class="font-bold text-xs text-brand-red uppercase tracking-wider bg-red-100 inline-block px-2 py-1 rounded">Produto #${index + 1}</div>
-                        
                         <label class="relative inline-flex items-center cursor-pointer ml-3">
                             <input type="checkbox" id="catalog-active-${index}" ${item.active ? 'checked' : ''} onchange="toggleCatalogActive(${index})" class="sr-only peer">
                             <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
@@ -1088,4 +1138,4 @@
         loadDataFromFirebase();
     </script>
 </body>
-    </html>
+</html>
