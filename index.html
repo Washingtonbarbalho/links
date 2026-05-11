@@ -47,23 +47,26 @@
 </head>
 <body class="text-gray-800 relative min-h-screen overflow-x-hidden">
 
+    <!-- Loader -->
     <div id="loader" class="fixed inset-0 bg-white z-[9999] flex-col items-center justify-center" style="display: none; opacity: 0;">
         <div class="w-12 h-12 border-4 border-brand-blue border-t-brand-cyan rounded-full animate-spin"></div>
         <p class="mt-4 text-brand-blue font-bold animate-pulse">A carregar...</p>
     </div>
 
+    <!-- Toast Notification -->
     <div id="toast" class="fixed top-5 right-5 transform translate-x-full opacity-0 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 z-[10000] flex items-center gap-2">
         <i class="ph-fill ph-check-circle text-xl"></i>
-        <span id="toast-msg">Guardado com sucesso!</span>
+        <span id="toast-msg">Salvo com sucesso!</span>
     </div>
 
+    <!-- Delete Confirm Modal -->
     <div id="delete-modal" class="fixed inset-0 bg-black/60 z-[10001] hidden flex items-center justify-center backdrop-blur-sm transition-opacity">
         <div class="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
             <div class="flex items-center gap-3 mb-4">
                 <div class="bg-red-100 text-red-500 p-3 rounded-full"><i class="ph-fill ph-warning-circle text-2xl"></i></div>
                 <h3 class="text-xl font-bold text-gray-900">Excluir Item?</h3>
             </div>
-            <p class="text-gray-500 text-sm mb-6">Tem a certeza que deseja excluir esta opção? Lembre-se de clicar em "Guardar" depois no painel.</p>
+            <p class="text-gray-500 text-sm mb-6">Tem certeza que deseja excluir esta opção? Lembre-se de clicar em "Salvar" depois no painel.</p>
             <div class="flex justify-end gap-3">
                 <button onclick="closeDeleteModal()" class="px-4 py-2 text-gray-600 font-semibold hover:bg-gray-100 rounded-lg transition-colors">Cancelar</button>
                 <button onclick="executeDelete()" class="px-4 py-2 bg-brand-red hover:bg-red-700 text-white font-semibold rounded-lg transition-colors shadow-md">Sim, excluir</button>
@@ -71,6 +74,82 @@
         </div>
     </div>
 
+    <!-- Modal Admin Edit Product -->
+    <div id="admin-product-modal" class="fixed inset-0 bg-black/60 z-[10015] hidden items-center justify-center backdrop-blur-sm p-4 sm:p-6 overflow-y-auto">
+        <div class="bg-white rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh] relative mt-10 mb-auto mx-auto border border-gray-100">
+            
+            <div class="px-5 py-4 border-b flex justify-between items-center sticky top-0 bg-white z-20 shadow-sm">
+                <h3 class="font-bold text-brand-blue text-lg flex items-center gap-2"><i class="ph-fill ph-box-box"></i> Editar Produto</h3>
+                <button onclick="closeAdminProductModal()" class="text-gray-400 hover:text-red-500 bg-gray-100 p-2 rounded-full transition-colors"><i class="ph-bold ph-x"></i></button>
+            </div>
+            
+            <div class="p-5 overflow-y-auto flex-1 flex flex-col gap-5 bg-gray-50/50">
+                <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="modal-cat-active" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                        <span class="ml-3 text-sm font-bold text-gray-700">Exibir produto no Link</span>
+                    </label>
+
+                    <div class="flex flex-col w-full sm:w-auto border-t sm:border-t-0 sm:border-l border-gray-200 sm:pl-4 pt-3 sm:pt-0 mt-3 sm:mt-0">
+                        <label class="text-[10px] font-bold text-gray-500 uppercase flex items-center gap-1 mb-1"><i class="ph-bold ph-calendar"></i> Período de Validade (Opcional)</label>
+                        <div class="flex items-center gap-2">
+                            <input type="date" id="modal-cat-start" class="border border-gray-200 p-2 rounded-lg text-xs w-full outline-none focus:border-brand-blue bg-white" title="Data de Início">
+                            <span class="text-xs font-bold text-gray-400">até</span>
+                            <input type="date" id="modal-cat-expires" class="border border-gray-200 p-2 rounded-lg text-xs w-full outline-none focus:border-brand-blue bg-white" title="Data de Fim">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="sm:col-span-2">
+                            <label class="text-[10px] font-bold text-gray-500 uppercase">Nome / Título *</label>
+                            <input type="text" id="modal-cat-title" placeholder="Ex: Geladeira Frost Free" class="border border-gray-200 p-2.5 rounded-xl text-sm w-full outline-none focus:border-brand-blue bg-gray-50 focus:bg-white transition-colors">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-500 uppercase">Subtítulo</label>
+                            <input type="text" id="modal-cat-sub" placeholder="Ex: Inox, 400 Litros" class="border border-gray-200 p-2.5 rounded-xl text-sm w-full outline-none focus:border-brand-blue bg-gray-50 focus:bg-white transition-colors">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-gray-500 uppercase">Etiqueta (Tag)</label>
+                            <input type="text" id="modal-cat-tag" placeholder="Ex: OFERTA" class="border border-gray-200 p-2.5 rounded-xl text-sm w-full outline-none focus:border-brand-blue bg-gray-50 focus:bg-white transition-colors">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-3">
+                        <label class="text-xs font-bold text-gray-700 uppercase flex items-center gap-1"><i class="ph-bold ph-images text-brand-blue"></i> Imagens do Produto</label>
+                        <div class="flex gap-2">
+                            <button onclick="addModalImageLink()" class="text-[10px] font-bold bg-white border border-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-50 shadow-sm text-gray-600">+ Add Link URL</button>
+                            <label class="text-[10px] font-bold bg-brand-blue text-white px-3 py-1.5 rounded-lg hover:bg-blue-800 cursor-pointer shadow-sm text-center">
+                                + Fazer Upload
+                                <input type="file" accept="image/*" class="hidden" onchange="handleModalImageUpload(event)">
+                            </label>
+                        </div>
+                    </div>
+                    <div id="modal-images-list" class="max-h-48 overflow-y-auto space-y-2 pr-1">
+                        <!-- Imagens renderizadas aqui -->
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
+                    <label class="text-[10px] font-bold text-gray-500 uppercase">Ficha Técnica / Detalhes</label>
+                    <textarea id="modal-cat-details" rows="5" class="border border-gray-200 p-3 rounded-xl text-sm w-full outline-none focus:border-brand-blue mt-1 bg-gray-50 focus:bg-white transition-colors" placeholder="Cole aqui os detalhes, ficha técnica e valores..."></textarea>
+                </div>
+            </div>
+
+            <div class="px-5 py-4 border-t bg-white flex justify-end gap-3 sticky bottom-0 z-20">
+                <button onclick="closeAdminProductModal()" class="px-5 py-2.5 text-gray-600 font-bold hover:bg-gray-100 rounded-xl transition-colors">Cancelar</button>
+                <button onclick="saveAdminProduct()" class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl shadow-lg transition-colors flex items-center gap-2">
+                    <i class="ph-bold ph-check"></i> Pronto, aplicar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal View Product (Public) -->
     <div id="product-modal" class="fixed inset-0 bg-white z-[10005] hidden flex-col overflow-y-auto">
         <div class="sticky top-0 bg-white z-20 px-4 py-3 flex justify-between items-center border-b shadow-sm">
             <h2 id="modal-product-title" class="font-bold text-lg text-gray-900 line-clamp-1 pr-4">Nome do Produto</h2>
@@ -90,17 +169,18 @@
 
             <div class="flex flex-col gap-3">
                 <a id="modal-btn-wpp" href="#" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-xl text-center flex items-center justify-center gap-2 shadow-lg transition-transform hover:scale-105">
-                    <i class="ph-fill ph-whatsapp-logo text-2xl"></i> Fale comigo no WhatsApp
+                    <i class="ph-fill ph-whatsapp-logo text-2xl"></i> Falar sobre isso no WhatsApp
                 </a>
             </div>
         </div>
     </div>
 
+    <!-- Modal Lead (Capture Contacts) -->
     <div id="lead-modal" class="fixed inset-0 bg-black/60 z-[10010] hidden items-center justify-center backdrop-blur-sm p-4">
         <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
-                    <i class="ph-fill ph-whatsapp-logo text-emerald-500 text-2xl"></i> Fale Connosco
+                    <i class="ph-fill ph-whatsapp-logo text-emerald-500 text-2xl"></i> Fale Conosco
                 </h3>
                 <button onclick="closeLeadModal()" class="text-gray-400 hover:text-gray-700 bg-gray-100 p-1 rounded-full"><i class="ph-bold ph-x text-lg"></i></button>
             </div>
@@ -112,12 +192,12 @@
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">O seu Nome <span class="text-red-500">*</span></label>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Seu Nome <span class="text-red-500">*</span></label>
                     <input type="text" id="lead-name" class="w-full border p-3 rounded-xl outline-none focus:border-emerald-500 bg-gray-50 transition-colors" placeholder="Ex: João Silva">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-700 mb-1">Localidade (Cidade/Bairro) <span class="text-red-500">*</span></label>
-                    <input type="text" id="lead-location" class="w-full border p-3 rounded-xl outline-none focus:border-emerald-500 bg-gray-50 transition-colors" placeholder="Ex: Centro, Lisboa">
+                    <input type="text" id="lead-location" class="w-full border p-3 rounded-xl outline-none focus:border-emerald-500 bg-gray-50 transition-colors" placeholder="Ex: Centro, Sobral">
                 </div>
                 <div id="lead-subject-container" class="hidden">
                     <label class="block text-xs font-bold text-gray-700 mb-1">O que deseja? <span class="text-red-500">*</span></label>
@@ -131,8 +211,8 @@
         </div>
     </div>
 
+    <!-- VIEW PÚBLICA -->
     <div id="view-public" class="hidden pb-12">
-        
         <header class="relative w-full h-40 bg-brand-blue overflow-hidden dot-pattern">
             <div class="absolute -top-10 -right-10 w-48 h-48 bg-brand-cyan rounded-[3rem] opacity-90 transform rotate-12"></div>
             <div class="absolute -bottom-16 -left-10 w-40 h-40 bg-brand-cyan rounded-[2rem] opacity-20 transform -rotate-12"></div>
@@ -160,7 +240,7 @@
 
             <div class="flex gap-3 w-full justify-start mb-8 px-2">
                 <a id="pub-btn-whatsapp" href="#" class="bg-brand-blue hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg transition-transform hover:scale-105 cursor-pointer">
-                    <i class="ph-fill ph-whatsapp-logo text-xl"></i> Fale comigo
+                    <i class="ph-fill ph-whatsapp-logo text-xl"></i> Falar comigo
                 </a>
                 <a id="pub-btn-insta" href="#" target="_blank" class="w-12 h-12 bg-brand-blue hover:bg-blue-800 text-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-105 flex-shrink-0">
                     <i class="ph-bold ph-instagram-logo text-xl"></i>
@@ -170,7 +250,6 @@
             <div class="w-full mb-8" id="pub-offers-section">
                 <h3 class="text-xl font-bold text-gray-800 mb-4 px-2">Ofertas em Destaque</h3>
                 <div id="pub-offers-container" class="grid grid-cols-1 sm:grid-cols-2 gap-6 px-2 pb-2"></div>
-                
                 <div id="pub-pagination-container" class="mt-8 mb-4 flex justify-center items-center gap-2" style="display: none;"></div>
             </div>
 
@@ -182,13 +261,13 @@
         </main>
 
         <footer class="text-center pb-8 opacity-50 hover:opacity-100 transition-opacity mt-4">
-            <button onclick="switchView('login')" class="text-xs text-gray-500 flex items-center justify-center gap-1 mx-auto bg-gray-200 px-3 py-1 rounded-full">
+            <button onclick="switchView('login')" class="text-xs text-gray-500 flex items-center justify-center gap-1 mx-auto bg-gray-200 px-3 py-1 rounded-full hover:bg-gray-300">
                 <i class="ph-fill ph-lock-key"></i> Painel do Vendedor
             </button>
         </footer>
     </div>
 
-
+    <!-- VIEW LOGIN -->
     <div id="view-login" class="hidden min-h-screen bg-gray-50 flex-col items-center justify-center px-4">
         <div class="max-w-sm w-full bg-white p-8 rounded-3xl shadow-xl border border-gray-100 relative">
             <button onclick="switchView('public')" class="absolute top-4 left-4 text-gray-400 hover:text-gray-800 p-2">
@@ -200,7 +279,7 @@
                 </div>
             </div>
             <h2 class="text-2xl font-bold text-center text-gray-900 mb-2">Acesso Restrito</h2>
-            <p class="text-center text-sm text-gray-500 mb-6">Faça o login para gerir o seu sistema</p>
+            <p class="text-center text-sm text-gray-500 mb-6">Faça o login para gerenciar seu sistema</p>
 
             <p id="login-error-msg" class="text-red-500 text-xs font-bold text-center mb-4 hidden bg-red-50 p-2 rounded"></p>
 
@@ -213,7 +292,7 @@
                     </div>
                 </div>
                 <div class="mb-6">
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Palavra-passe</label>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Senha</label>
                     <div class="relative">
                         <i class="ph-bold ph-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         <input type="password" id="login-pass" required class="w-full pl-10 pr-4 py-3 bg-gray-50 border rounded-xl outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-all" placeholder="••••••••">
@@ -226,9 +305,9 @@
         </div>
     </div>
 
-
+    <!-- VIEW ADMIN -->
     <div id="view-admin" class="hidden bg-gray-100 min-h-screen pb-20 flex-col">
-        <header class="bg-gray-900 text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center">
+        <header class="bg-gray-900 text-white p-4 shadow-md sticky top-0 z-40 flex justify-between items-center">
             <h1 class="font-bold text-base sm:text-lg flex items-center gap-2">
                 <i class="ph-fill ph-gear"></i> Painel
             </h1>
@@ -237,7 +316,7 @@
                     <i class="ph-bold ph-eye text-lg sm:text-xl"></i>
                 </button>
                 <button onclick="saveData()" class="bg-emerald-500 hover:bg-emerald-600 px-3 sm:px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-1.5 transition-colors shadow-lg">
-                    <i class="ph-bold ph-floppy-disk"></i> Guardar
+                    <i class="ph-bold ph-floppy-disk"></i> Salvar
                 </button>
                 <button onclick="logoutAdmin()" class="bg-red-500 hover:bg-red-600 px-3 p-2 rounded-lg text-sm font-bold flex items-center transition-colors" title="Sair do Painel">
                     <i class="ph-bold ph-sign-out"></i>
@@ -245,17 +324,17 @@
             </div>
         </header>
 
-        <div class="flex border-b bg-white sticky top-[68px] z-40 shadow-sm">
+        <div class="flex border-b bg-white sticky top-[68px] z-30 shadow-sm">
             <button id="tab-btn-config" onclick="switchAdminTab('config')" class="flex-1 py-3 text-sm sm:text-base font-bold border-b-2 border-brand-blue text-brand-blue transition-colors">
                 Configurações
             </button>
             <button id="tab-btn-catalog" onclick="switchAdminTab('catalog')" class="flex-1 py-3 text-sm sm:text-base font-bold text-gray-400 border-b-2 border-transparent hover:text-gray-600 transition-colors flex items-center justify-center gap-2">
-                Produtos <span id="catalog-count-badge" class="bg-gray-200 text-gray-600 text-[10px] px-2 py-0.5 rounded-full">0</span>
+                Produtos <span id="catalog-count-badge" class="bg-brand-blue text-white text-[10px] px-2 py-0.5 rounded-full font-bold">0</span>
             </button>
         </div>
 
         <div id="tab-content-config" class="max-w-2xl mx-auto w-full p-4 flex flex-col gap-6 mt-2">
-            
+            <!-- IDENTIDADE VISUAL -->
             <section class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
                 <h2 class="font-bold text-brand-blue mb-4 flex items-center gap-2 border-b pb-2"><i class="ph-bold ph-image"></i> 1. Identidade Visual</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -263,21 +342,22 @@
                         <label class="text-xs font-bold text-gray-700">Foto de Perfil (Redonda)</label>
                         <div class="flex items-center gap-3">
                             <img id="adm-photo-preview" src="" class="w-14 h-14 rounded-full object-cover border-2 border-brand-blue bg-white">
-                            <input type="file" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-blue/10 file:text-brand-blue hover:file:bg-brand-blue/20 cursor-pointer" onchange="handleImageUpload(event, 'photoUrl', 'adm-photo-preview')">
+                            <input type="file" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:font-semibold file:bg-brand-blue/10 file:text-brand-blue hover:file:bg-brand-blue/20 cursor-pointer" onchange="handleImageUpload(event, 'photoUrl', 'adm-photo-preview')">
                         </div>
                     </div>
                     <div class="flex flex-col gap-2 bg-gray-50 p-3 rounded-xl border">
-                        <label class="text-xs font-bold text-gray-700">Logótipo da Loja (Quadrada)</label>
+                        <label class="text-xs font-bold text-gray-700">Logo da Loja (Quadrada)</label>
                         <div class="flex items-center gap-3">
                             <img id="adm-logo-preview" src="" class="w-14 h-14 object-contain border-2 border-gray-300 bg-white rounded-md p-1">
-                            <input type="file" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300 cursor-pointer" onchange="handleImageUpload(event, 'logoUrl', 'adm-logo-preview')">
+                            <input type="file" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300 cursor-pointer" onchange="handleImageUpload(event, 'logoUrl', 'adm-logo-preview')">
                         </div>
                     </div>
                 </div>
             </section>
 
+            <!-- INFOS E CONTATO -->
             <section class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
-                <h2 class="font-bold text-brand-blue mb-4 flex items-center gap-2 border-b pb-2"><i class="ph-bold ph-user"></i> 2. Informações e Contacto</h2>
+                <h2 class="font-bold text-brand-blue mb-4 flex items-center gap-2 border-b pb-2"><i class="ph-bold ph-user"></i> 2. Informações e Contato</h2>
                 <div class="grid gap-4">
                     <div class="grid grid-cols-2 gap-4">
                         <div class="col-span-2 sm:col-span-1">
@@ -307,16 +387,15 @@
                     <div class="border-t pt-4 mt-2">
                         <div class="flex items-center justify-between mb-3">
                             <h3 class="text-sm font-bold text-gray-700 flex items-center gap-2"><i class="ph-fill ph-calendar-check"></i> Horários de Atendimento</h3>
-                            
                             <label class="relative inline-flex items-center cursor-pointer bg-red-50 px-3 py-1.5 rounded-full border border-red-100">
                                 <span class="mr-2 text-[11px] font-bold text-red-600">Modo Férias</span>
                                 <input type="checkbox" id="adm-vacation-mode" class="sr-only peer" onchange="toggleVacationMode()">
-                                <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[8px] after:left-[83px] sm:after:left-[86px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-500"></div>
+                                <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-500"></div>
                             </label>
                         </div>
                         
                         <div id="adm-vacation-settings" class="hidden bg-red-50 p-4 rounded-xl border border-red-200 mb-4">
-                            <p class="text-xs text-red-700 mb-3 font-medium">Os seus clientes verão um aviso de que está de férias, mas ainda poderão deixar mensagem.</p>
+                            <p class="text-xs text-red-700 mb-3 font-medium">Seus clientes verão um aviso de que você está de férias, mas ainda poderão deixar mensagem.</p>
                             <div class="grid grid-cols-2 gap-3">
                                 <div class="col-span-2 sm:col-span-1">
                                     <label class="block text-[10px] font-bold text-red-600 uppercase mb-1">Data de Retorno</label>
@@ -326,23 +405,21 @@
                         </div>
 
                         <div id="adm-normal-schedule">
-                            <p class="text-[10px] text-gray-500 mb-3">Defina os dias e horários em que atende. Desmarque o dia para informar que é folga.</p>
-                            
-                            <div id="adm-schedule-container" class="space-y-2 mb-4">
-                                </div>
-                            
+                            <p class="text-[10px] text-gray-500 mb-3">Defina os dias e horários que você atende. Desmarque o dia se for sua folga.</p>
+                            <div id="adm-schedule-container" class="space-y-2 mb-4"></div>
                             <div>
-                                <label class="block text-xs font-bold text-gray-500 mb-1">Observação (Exibida durante o expediente)</label>
-                                <input type="text" id="adm-time-obs" class="w-full border p-2 rounded-lg outline-none focus:border-brand-blue bg-gray-50" placeholder="Ex: Respondemos em até 10 minutos!">
+                                <label class="block text-xs font-bold text-gray-500 mb-1">Observação (Aparece no topo do WhatsApp)</label>
+                                <input type="text" id="adm-time-obs" class="w-full border p-2 rounded-lg outline-none focus:border-brand-blue bg-gray-50" placeholder="Ex: Respondemos super rápido!">
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
+            <!-- BOTÕES / CATEGORIAS -->
             <section class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
                 <div class="flex justify-between items-center mb-4 border-b pb-2">
-                    <h2 class="font-bold text-brand-blue flex items-center gap-2"><i class="ph-bold ph-list-dashes"></i> 3. Botões de Acesso (O que procura?)</h2>
+                    <h2 class="font-bold text-brand-blue flex items-center gap-2"><i class="ph-bold ph-list-dashes"></i> 3. Botões (O que procura?)</h2>
                     <button onclick="addCategory()" class="bg-brand-blue text-white text-xs px-3 py-1.5 rounded-lg hover:bg-blue-800 transition-colors font-bold shadow-sm">+ Adicionar Botão</button>
                 </div>
                 <div id="adm-categories-list" class="flex flex-col gap-4"></div>
@@ -351,20 +428,20 @@
 
         <div id="tab-content-catalog" class="hidden max-w-2xl mx-auto w-full p-4 flex-col gap-4 mt-2">
             
-            <div class="sticky top-[125px] z-30 bg-gray-100 pb-4 pt-1 rounded-t-xl">
+            <div class="sticky top-[125px] z-20 bg-gray-100 pb-4 pt-1 rounded-t-xl">
                 <div class="flex gap-2 items-center">
                     <div class="relative flex-1">
                         <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
-                        <input type="text" id="catalog-search" onkeyup="filterCatalog()" placeholder="Buscar produto..." class="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:border-brand-blue shadow-sm text-sm">
+                        <input type="text" id="catalog-search" onkeyup="filterCatalog()" placeholder="Buscar produto na lista..." class="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:border-brand-blue shadow-sm text-sm">
                     </div>
-                    <button onclick="addCatalogItem()" class="bg-brand-red text-white px-4 py-3 rounded-xl hover:bg-red-800 transition-colors font-bold shadow-md whitespace-nowrap flex items-center gap-1.5 text-sm">
+                    <button onclick="openAdminProductModal(-1)" class="bg-brand-blue text-white px-5 py-3 rounded-xl hover:bg-blue-800 transition-colors font-bold shadow-md whitespace-nowrap flex items-center gap-1.5 text-sm">
                         <i class="ph-bold ph-plus"></i> Novo
                     </button>
                 </div>
-                <p class="text-[10px] text-gray-500 mt-2 px-1">Guarde todos os seus produtos aqui. Apenas os produtos com o interruptor <b>"Exibir no Link"</b> ligado irão aparecer na página do cliente.</p>
             </div>
 
-            <div id="adm-catalog-list" class="flex flex-col gap-6"></div>
+            <!-- LISTA DE PRODUTOS RESUMIDA -->
+            <div id="adm-catalog-list" class="flex flex-col gap-3"></div>
 
         </div>
 
@@ -390,15 +467,18 @@
         const appId = firebaseConfig.projectId; 
         
         let currentUser = null;
-
         let currentLeadContext = '';
         let currentLeadData = '';
-
         let currentPage = 1;
         const itemsPerPage = 10;
+        let itemToDelete = null;
+
+        // Variaveis para o modal de produto
+        let editingCatalogIndex = null;
+        let tempEditingProduct = {};
 
         const availableIcons = [
-            { id: 'device-mobile', name: '📱 Telemóvel' }, { id: 'television', name: '📺 TVs' },
+            { id: 'device-mobile', name: '📱 Celular' }, { id: 'television', name: '📺 TVs' },
             { id: 'plug', name: '🔌 Eletrodomésticos' }, { id: 'armchair', name: '🪑 Móveis' },
             { id: 'baby-carriage', name: '🍼 Infantil' }, { id: 'bicycle', name: '🚲 Bicicletas' },
             { id: 'car', name: '🚗 Automóvel' }, { id: 'shopping-bag', name: '🛍️ Ofertas' },
@@ -407,7 +487,7 @@
 
         let appData = {
             name: "Washington Barbalho", role: "Vendedor Especialista",
-            bio: "A conectar você aos melhores produtos com as melhores condições!",
+            bio: "Conectando você aos melhores produtos com as melhores condições!",
             photoUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=300&auto=format&fit=crop",
             logoUrl: "https://placehold.co/150x150/ffffff/1e40af?text=LOGO",
             whatsapp: "88999990000", instagram: "seu_usuario",
@@ -422,11 +502,9 @@
                 "4": { active: true, start: "08:00", end: "18:00" },  
                 "5": { active: true, start: "08:00", end: "18:00" },  
                 "6": { active: true, start: "08:00", end: "13:00" },  
-                obs: "Atendimento online. Respondemos rápido!"
+                obs: "Atendimento online. Respondemos rapidinho!"
             }
         };
-
-        let itemToDelete = null;
 
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
@@ -446,7 +524,7 @@
                 await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-pass').value);
                 document.getElementById('login-email').value = ''; document.getElementById('login-pass').value = '';
             } catch (error) { 
-                errorMsg.textContent = "Acesso Negado. Verifique os seus dados.";
+                errorMsg.textContent = "Acesso Negado. Verifique os dados.";
                 errorMsg.classList.remove('hidden');
                 hideLoader(); 
             }
@@ -462,25 +540,11 @@
             onSnapshot(docRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    
-                    if(data.offers && (!data.catalog || data.catalog.length === 0)) {
-                        data.catalog = data.offers.map(off => {
-                            if(off.imageUrl && !off.images) { off.images = [off.imageUrl]; delete off.imageUrl; }
-                            off.active = true; 
-                            return off;
-                        });
-                        delete data.offers;
-                    }
-                    
                     if(!data.catalog) data.catalog = [];
                     if(!data.categories) data.categories = [];
                     if(!data.vacationMode) data.vacationMode = { active: false, returnDate: "" };
-                    
                     if(!data.businessHours) {
                         data.businessHours = appData.businessHours; 
-                    } else if (data.businessHours.start !== undefined && data.businessHours["1"] === undefined) {
-                        const oldStart = data.businessHours.start; const oldEnd = data.businessHours.end; const oldObs = data.businessHours.obs;
-                        data.businessHours = { "0": { active: false, start: oldStart, end: oldEnd }, "1": { active: true, start: oldStart, end: oldEnd }, "2": { active: true, start: oldStart, end: oldEnd }, "3": { active: true, start: oldStart, end: oldEnd }, "4": { active: true, start: oldStart, end: oldEnd }, "5": { active: true, start: oldStart, end: oldEnd }, "6": { active: true, start: oldStart, end: oldEnd }, obs: oldObs };
                     }
                     appData = data;
                 }
@@ -514,7 +578,6 @@
 
         window.switchAdminTab = (tab) => {
             syncInputsToData(); 
-            
             const btnConfig = document.getElementById('tab-btn-config');
             const btnCatalog = document.getElementById('tab-btn-catalog');
             const contentConfig = document.getElementById('tab-content-config');
@@ -547,7 +610,7 @@
                 const searchableText = `${item.title} ${item.subtitle} ${item.details} ${item.tag}`.toLowerCase();
                 
                 if (searchableText.includes(query)) {
-                    domItem.style.display = 'block';
+                    domItem.style.display = '';
                 } else {
                     domItem.style.display = 'none';
                 }
@@ -572,13 +635,12 @@
         function formatDateBR(dateString) {
             if (!dateString) return '';
             const parts = dateString.split('-');
+            if (parts.length !== 3) return dateString;
             return `${parts[2]}/${parts[1]}/${parts[0]}`;
         }
 
         window.openLeadModal = (context, data = '') => {
-            currentLeadContext = context;
-            currentLeadData = data;
-            
+            currentLeadContext = context; currentLeadData = data;
             document.getElementById('lead-name').value = '';
             document.getElementById('lead-location').value = '';
             document.getElementById('lead-subject').value = '';
@@ -589,27 +651,25 @@
 
             if (context === 'main_wpp') {
                 subjectContainer.classList.remove('hidden');
-                desc.textContent = "Como podemos ajudá-lo hoje?";
+                desc.textContent = "Como podemos ajudar você hoje?";
             } else if (context === 'category') {
                 subjectContainer.classList.add('hidden');
-                desc.textContent = `Ótima escolha! Para ver opções de ${data}, informe os seus dados.`;
+                desc.textContent = `Ótima escolha! Para ver opções de ${data}, informe seus dados.`;
             } else if (context === 'catalog') {
                 subjectContainer.classList.add('hidden');
-                desc.textContent = `Informe os seus dados para ver disponibilidade e valores de ${data}.`;
+                desc.textContent = `Informe seus dados para ver disponibilidade e valores de ${data}.`;
             }
 
             const statusEl = document.getElementById('lead-time-status');
             
-            // VERIFICAÇÃO: FÉRIAS OU HORÁRIO COMERCIAL
             if (appData.vacationMode && appData.vacationMode.active) {
-                const returnDateStr = appData.vacationMode.returnDate ? `Voltamos a ${formatDateBR(appData.vacationMode.returnDate)}.` : "Voltaremos em breve.";
+                const returnDateStr = appData.vacationMode.returnDate ? `Voltamos em ${formatDateBR(appData.vacationMode.returnDate)}.` : "Voltaremos em breve.";
                 statusEl.className = "mb-4 text-xs font-medium p-3 rounded-xl flex items-start gap-2 bg-red-50 text-red-700 border border-red-200";
-                statusEl.innerHTML = `<i class="ph-fill ph-airplane-tilt text-lg mt-0.5"></i> <div><strong>Vendedor de Férias/Ausente</strong><br>Pode deixar a sua mensagem, mas a resposta não será imediata. ${returnDateStr}</div>`;
+                statusEl.innerHTML = `<i class="ph-fill ph-airplane-tilt text-lg mt-0.5"></i> <div><strong>Vendedor de Férias/Ausente</strong><br>Pode deixar sua mensagem, mas a resposta não será imediata. ${returnDateStr}</div>`;
             } else {
                 const now = new Date();
                 const currentDay = now.getDay(); 
                 const currentMinutesOfDay = now.getHours() * 60 + now.getMinutes();
-                
                 const todaySchedule = appData.businessHours[currentDay];
                 let isOpen = false;
 
@@ -628,10 +688,10 @@
 
                 if (isOpen) {
                     statusEl.className = "mb-4 text-xs font-medium p-3 rounded-xl flex items-start gap-2 bg-emerald-50 text-emerald-700 border border-emerald-100";
-                    statusEl.innerHTML = `<i class="ph-fill ph-clock text-lg mt-0.5"></i> <div><strong>Atendimento Online</strong><br>${appData.businessHours.obs || "Estamos online para o atender!"}</div>`;
+                    statusEl.innerHTML = `<i class="ph-fill ph-clock text-lg mt-0.5"></i> <div><strong>Atendimento Online</strong><br>${appData.businessHours.obs || "Estamos online para atender você!"}</div>`;
                 } else {
                     statusEl.className = "mb-4 text-xs font-medium p-3 rounded-xl flex items-start gap-2 bg-amber-50 text-amber-700 border border-amber-100";
-                    statusEl.innerHTML = `<i class="ph-fill ph-warning-circle text-lg mt-0.5"></i> <div><strong>Fora do horário comercial</strong><br>O vendedor não está online no momento e a resposta pode demorar um pouco. Deixe a sua mensagem!</div>`;
+                    statusEl.innerHTML = `<i class="ph-fill ph-warning-circle text-lg mt-0.5"></i> <div><strong>Fora do horário comercial</strong><br>O vendedor não está online agora e a resposta pode demorar um pouco. Deixe sua mensagem!</div>`;
                 }
             }
 
@@ -651,7 +711,7 @@
             const errorLabel = document.getElementById('lead-error');
 
             if (!name || !location) {
-                errorLabel.textContent = "Por favor, preencha o seu nome e localidade.";
+                errorLabel.textContent = "Por favor, preencha seu nome e localidade.";
                 errorLabel.classList.remove('hidden'); return;
             }
 
@@ -661,7 +721,7 @@
             }
             errorLabel.classList.add('hidden');
 
-            let message = `Olá ${appData.name}! O meu nome é *${name}*, sou de *${location}*.\n\n`;
+            let message = `Olá ${appData.name}! Meu nome é *${name}*, sou de *${location}*.\n\n`;
 
             if (currentLeadContext === 'main_wpp') { message += `*Desejo:* ${subject}`; } 
             else if (currentLeadContext === 'category') { message += `Gostaria de ver opções e valores de *${currentLeadData}*.`; } 
@@ -696,11 +756,7 @@
 
             const btnWpp = document.getElementById('modal-btn-wpp');
             btnWpp.href = "#";
-            btnWpp.onclick = (e) => {
-                e.preventDefault();
-                closeProductModal(); 
-                openLeadModal('catalog', item.title); 
-            };
+            btnWpp.onclick = (e) => { e.preventDefault(); closeProductModal(); openLeadModal('catalog', item.title); };
 
             const modalEl = document.getElementById('product-modal');
             modalEl.classList.remove('hidden'); modalEl.classList.add('flex');
@@ -727,11 +783,7 @@
 
         function renderPaginationControls(totalPages) {
             const container = document.getElementById('pub-pagination-container');
-            if (totalPages <= 1) {
-                container.style.display = 'none';
-                return;
-            }
-            
+            if (totalPages <= 1) { container.style.display = 'none'; return; }
             container.style.display = 'flex';
             let html = '';
 
@@ -742,7 +794,6 @@
                 } else if (i === 4 && totalPages > 4) {
                     const isHiddenPageActive = currentPage > 3 && currentPage < totalPages;
                     const active = isHiddenPageActive ? 'bg-brand-blue text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50';
-                    
                     html += `
                         <div class="relative inline-block">
                             <button onclick="togglePagesModal()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full font-bold shadow-sm transition-colors ${active}">...</button>
@@ -778,13 +829,12 @@
             
             const btnWpp = document.getElementById('pub-btn-whatsapp');
             
-            // Tratamento do Botão Principal Férias vs Normal
             if (appData.vacationMode && appData.vacationMode.active) {
                 btnWpp.className = "bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg transition-transform hover:scale-105 cursor-pointer";
                 btnWpp.innerHTML = `<i class="ph-fill ph-airplane-tilt text-xl"></i> Ausente / Férias`;
             } else {
                 btnWpp.className = "bg-brand-blue hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg transition-transform hover:scale-105 cursor-pointer";
-                btnWpp.innerHTML = `<i class="ph-fill ph-whatsapp-logo text-xl"></i> Fale comigo`;
+                btnWpp.innerHTML = `<i class="ph-fill ph-whatsapp-logo text-xl"></i> Falar comigo`;
             }
 
             btnWpp.onclick = (e) => { e.preventDefault(); openLeadModal('main_wpp'); };
@@ -794,9 +844,25 @@
             const offersSection = document.getElementById('pub-offers-section');
             offersContainer.innerHTML = '';
             
+            // VERIFICAÇÃO DE PRAZO E ATIVO PARA O LINK PÚBLICO
             const activeOffers = appData.catalog
                 .map((item, index) => ({ ...item, originalIndex: index })) 
-                .filter(item => item.active === true);
+                .filter(item => {
+                    if (!item.active) return false;
+                    
+                    const now = new Date();
+                    // Lógica da Data de Início
+                    if (item.startDate) {
+                        const startDate = new Date(item.startDate + "T00:00:00");
+                        if (now < startDate) return false; 
+                    }
+                    // Lógica da Data de Expiração (valida se o dia já passou)
+                    if (item.expiresAt) {
+                        const expDate = new Date(item.expiresAt + "T23:59:59"); // Fim do dia escolhido
+                        if (now > expDate) return false; 
+                    }
+                    return true;
+                });
             
             const totalPages = Math.ceil(activeOffers.length / itemsPerPage);
             if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
@@ -805,7 +871,6 @@
                 offersSection.style.display = 'none';
             } else {
                 offersSection.style.display = 'block';
-                
                 const startIndex = (currentPage - 1) * itemsPerPage;
                 const pageOffers = activeOffers.slice(startIndex, startIndex + itemsPerPage);
 
@@ -882,9 +947,90 @@
             document.getElementById(`adm-day-end-${dayIndex}`).disabled = !isActive;
         };
 
-        window.toggleCatalogActive = (index) => {
-            appData.catalog[index].active = document.getElementById(`catalog-active-${index}`).checked;
+        // --- LÓGICA DO NOVO MODAL DE PRODUTO (ADMIN) ---
+        window.openAdminProductModal = (index) => {
+            editingCatalogIndex = index;
+            if (index === -1) {
+                // Novo Produto
+                tempEditingProduct = { active: true, title: "", subtitle: "", tag: "Oferta", images: [], details: "", startDate: "", expiresAt: "" };
+            } else {
+                // Produto Existente (fazemos uma cópia para não mexer no original antes de salvar)
+                tempEditingProduct = JSON.parse(JSON.stringify(appData.catalog[index]));
+            }
+
+            // Preenche os campos do modal
+            document.getElementById('modal-cat-active').checked = tempEditingProduct.active;
+            document.getElementById('modal-cat-start').value = tempEditingProduct.startDate || '';
+            document.getElementById('modal-cat-expires').value = tempEditingProduct.expiresAt || '';
+            document.getElementById('modal-cat-title').value = tempEditingProduct.title || '';
+            document.getElementById('modal-cat-sub').value = tempEditingProduct.subtitle || '';
+            document.getElementById('modal-cat-tag').value = tempEditingProduct.tag || 'Oferta';
+            document.getElementById('modal-cat-details').value = tempEditingProduct.details || '';
+
+            renderModalImages();
+
+            const modal = document.getElementById('admin-product-modal');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
         };
+
+        window.closeAdminProductModal = () => {
+            editingCatalogIndex = null;
+            const modal = document.getElementById('admin-product-modal');
+            modal.classList.add('hidden'); modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        };
+
+        window.saveAdminProduct = () => {
+            // Pega as infos do modal de volta para a cópia
+            tempEditingProduct.active = document.getElementById('modal-cat-active').checked;
+            tempEditingProduct.startDate = document.getElementById('modal-cat-start').value;
+            tempEditingProduct.expiresAt = document.getElementById('modal-cat-expires').value;
+            tempEditingProduct.title = document.getElementById('modal-cat-title').value;
+            tempEditingProduct.subtitle = document.getElementById('modal-cat-sub').value;
+            tempEditingProduct.tag = document.getElementById('modal-cat-tag').value;
+            tempEditingProduct.details = document.getElementById('modal-cat-details').value;
+
+            // Salva na array principal
+            if (editingCatalogIndex === -1) {
+                appData.catalog.unshift(tempEditingProduct);
+            } else {
+                appData.catalog[editingCatalogIndex] = tempEditingProduct;
+            }
+
+            renderAdminCatalog();
+            closeAdminProductModal();
+            // Apenas atualizamos na memória. Para enviar ao banco, o usuário clica no Salvar principal lá no topo.
+        };
+
+        function renderModalImages() {
+            const list = document.getElementById('modal-images-list');
+            list.innerHTML = '';
+            if (!tempEditingProduct.images) tempEditingProduct.images = [];
+
+            tempEditingProduct.images.forEach((img, imgIndex) => {
+                list.innerHTML += `
+                    <div class="flex items-center gap-2 bg-white p-1.5 border border-gray-200 rounded-xl shadow-sm">
+                        <img src="${img}" class="w-10 h-10 object-contain rounded bg-gray-50 border border-gray-100" onerror="this.src='https://placehold.co/40x40?text=IMG'">
+                        <input type="text" value="${img}" onchange="updateTempImage(${imgIndex}, this.value)" class="p-2 text-xs w-full outline-none focus:border-brand-blue border border-gray-100 rounded-lg bg-gray-50 focus:bg-white" placeholder="Cole o link da imagem aqui">
+                        <button onclick="removeModalImage(${imgIndex})" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"><i class="ph-bold ph-trash"></i></button>
+                    </div>
+                `;
+            });
+
+            if (tempEditingProduct.images.length === 0) {
+                list.innerHTML = '<p class="text-xs text-gray-400 p-2 text-center border border-dashed rounded-xl border-gray-300">Nenhuma imagem. Adicione pelo botão acima!</p>';
+            }
+        }
+
+        window.updateTempImage = (index, value) => { tempEditingProduct.images[index] = value; };
+        window.addModalImageLink = () => { tempEditingProduct.images.push(''); renderModalImages(); };
+        window.removeModalImage = (index) => { tempEditingProduct.images.splice(index, 1); renderModalImages(); };
+        window.handleModalImageUpload = (event) => {
+            const file = event.target.files[0]; if (!file) return;
+            processImageUpload(file, (base64) => { tempEditingProduct.images.push(base64); renderModalImages(); });
+        };
+        // ----------------------------------------------
 
         function renderAdminView() {
             document.getElementById('adm-name').value = appData.name || '';
@@ -895,11 +1041,10 @@
             document.getElementById('adm-photo-preview').src = appData.photoUrl || '';
             document.getElementById('adm-logo-preview').src = appData.logoUrl || '';
 
-            // Render Férias
             if(appData.vacationMode) {
                 document.getElementById('adm-vacation-mode').checked = appData.vacationMode.active;
                 document.getElementById('adm-vacation-return').value = appData.vacationMode.returnDate || '';
-                window.toggleVacationMode(); // Ajusta a visibilidade
+                window.toggleVacationMode(); 
             }
 
             const daysOfWeek = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
@@ -935,76 +1080,82 @@
             document.getElementById('catalog-count-badge').textContent = appData.catalog.length;
             
             appData.catalog.forEach((item, index) => {
-                const div = document.createElement('div');
-                div.className = `p-4 rounded-xl relative group shadow-sm border ${item.active ? 'bg-white border-green-200' : 'bg-gray-50 border-gray-200 opacity-80'}`;
-                
-                const upBtn = index > 0 ? `<button onclick="moveItem('catalog', ${index}, -1)" class="p-1.5 bg-white text-gray-600 border rounded hover:bg-gray-200"><i class="ph-bold ph-caret-up"></i></button>` : `<div class="w-8"></div>`;
-                const downBtn = index < appData.catalog.length - 1 ? `<button onclick="moveItem('catalog', ${index}, 1)" class="p-1.5 bg-white text-gray-600 border rounded hover:bg-gray-200"><i class="ph-bold ph-caret-down"></i></button>` : `<div class="w-8"></div>`;
-                
-                let imagesInputsHtml = '';
-                if(item.images) {
-                    item.images.forEach((img, imgIndex) => {
-                        imagesInputsHtml += `
-                            <div class="flex items-center gap-2 mb-2 bg-white p-1 border rounded-lg">
-                                <img src="${img}" class="w-10 h-10 object-contain rounded bg-gray-50 border" onerror="this.src='https://placehold.co/40x40?text=IMG'">
-                                <input type="text" id="catalog-${index}-img-${imgIndex}" value="${img}" class="p-2 text-xs w-full outline-none focus:text-brand-blue" placeholder="Link URL da imagem">
-                                <button onclick="removeCatalogImage(${index}, ${imgIndex})" class="p-2 text-red-500 hover:bg-red-50 rounded"><i class="ph-bold ph-x-circle"></i></button>
-                            </div>
-                        `;
-                    });
+                let isExpired = false;
+                let isScheduled = false;
+                const now = new Date();
+
+                if (item.expiresAt) {
+                    const expDate = new Date(item.expiresAt + "T23:59:59");
+                    if (now > expDate) isExpired = true;
+                }
+                if (item.startDate) {
+                    const startDate = new Date(item.startDate + "T00:00:00");
+                    if (now < startDate) isScheduled = true;
                 }
 
-                div.innerHTML = `
-                    <div class="absolute top-3 right-3 flex gap-1">
-                        ${upBtn}${downBtn}
-                        <button onclick="openDeleteModal('catalog', ${index})" class="p-1.5 bg-white text-red-500 border rounded hover:bg-red-50 ml-2 shadow-sm"><i class="ph-bold ph-trash"></i></button>
-                    </div>
+                // Estilo baseado se o produto está ativo/visível ou não
+                const isActiveClass = item.active && !isExpired ? 'bg-white hover:border-brand-blue' : 'bg-gray-100 border-gray-200 opacity-80';
+                
+                let statusColor = 'bg-gray-200 text-gray-600';
+                let statusText = 'Oculto';
+
+                if (item.active) {
+                    if (isExpired) {
+                        statusColor = 'bg-red-100 text-red-700';
+                        statusText = 'Expirado';
+                    } else if (isScheduled) {
+                        statusColor = 'bg-amber-100 text-amber-700';
+                        statusText = 'Agendado';
+                    } else {
+                        statusColor = 'bg-emerald-100 text-emerald-700';
+                        statusText = 'No Link';
+                    }
+                }
+
+                let periodHtml = '';
+                if (item.startDate || item.expiresAt) {
+                    let pText = '';
+                    if (item.startDate && item.expiresAt) pText = `${formatDateBR(item.startDate)} até ${formatDateBR(item.expiresAt)}`;
+                    else if (item.startDate) pText = `A partir de ${formatDateBR(item.startDate)}`;
+                    else if (item.expiresAt) pText = `Até ${formatDateBR(item.expiresAt)}`;
                     
-                    <div class="flex justify-between items-center mb-3 pr-24">
-                        <div class="font-bold text-xs text-brand-red uppercase tracking-wider bg-red-100 inline-block px-2 py-1 rounded">Produto #${index + 1}</div>
-                        <label class="relative inline-flex items-center cursor-pointer ml-3">
-                            <input type="checkbox" id="catalog-active-${index}" ${item.active ? 'checked' : ''} onchange="toggleCatalogActive(${index})" class="sr-only peer">
-                            <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
-                            <span class="ml-2 text-[10px] font-bold ${item.active ? 'text-emerald-600' : 'text-gray-500'}">Exibir no Link</span>
-                        </label>
+                    periodHtml = `<span class="px-2 py-0.5 rounded text-[10px] bg-brand-blue/10 text-brand-blue font-bold flex items-center gap-1"><i class="ph-bold ph-calendar"></i> ${pText}</span>`;
+                }
+
+                const upBtn = index > 0 ? `<button onclick="event.stopPropagation(); moveItem('catalog', ${index}, -1)" class="p-2 bg-white text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors border shadow-sm"><i class="ph-bold ph-caret-up"></i></button>` : ``;
+                const downBtn = index < appData.catalog.length - 1 ? `<button onclick="event.stopPropagation(); moveItem('catalog', ${index}, 1)" class="p-2 bg-white text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-800 transition-colors border shadow-sm"><i class="ph-bold ph-caret-down"></i></button>` : ``;
+                
+                const imgUrl = item.images && item.images.length > 0 ? item.images[0] : 'https://placehold.co/100x100?text=S/IMG';
+
+                const div = document.createElement('div');
+                div.className = `flex flex-col sm:flex-row p-3 rounded-2xl relative group shadow-sm border border-gray-200 cursor-pointer transition-colors ${isActiveClass}`;
+                div.onclick = () => openAdminProductModal(index);
+                
+                div.innerHTML = `
+                    <div class="flex items-center flex-1 pr-2">
+                        <img src="${imgUrl}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-gray-200 bg-white mr-4 flex-shrink-0">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-gray-900 text-sm sm:text-base truncate leading-tight">${item.title || 'Novo Produto'}</h4>
+                            <p class="text-xs text-gray-500 truncate mb-1.5">${item.subtitle || 'Sem descrição...'}</p>
+                            
+                            <div class="flex flex-wrap gap-1.5 items-center">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold ${statusColor}">${statusText}</span>
+                                ${periodHtml}
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3 mb-3">
-                        <div class="col-span-2 sm:col-span-1">
-                            <label class="text-[10px] font-bold text-gray-500 uppercase">Nome / Título</label>
-                            <input type="text" id="catalog-title-${index}" value="${item.title}" class="border p-2 rounded text-sm w-full bg-white outline-none focus:border-brand-blue">
+                    <div class="flex sm:flex-col items-center justify-between sm:justify-center border-t sm:border-t-0 sm:border-l border-gray-200 mt-3 sm:mt-0 pt-3 sm:pt-0 sm:pl-3 gap-2">
+                        <div class="flex gap-1.5">
+                            ${upBtn}
+                            ${downBtn}
                         </div>
-                        <div class="col-span-1">
-                            <label class="text-[10px] font-bold text-gray-500 uppercase">Subtítulo</label>
-                            <input type="text" id="catalog-sub-${index}" value="${item.subtitle}" class="border p-2 rounded text-sm w-full bg-white outline-none focus:border-brand-blue">
-                        </div>
-                        <div class="col-span-1">
-                            <label class="text-[10px] font-bold text-gray-500 uppercase">Etiqueta</label>
-                            <input type="text" id="catalog-tag-${index}" value="${item.tag || 'OFERTA'}" class="border p-2 rounded text-sm w-full bg-white outline-none focus:border-brand-blue">
-                        </div>
-                    </div>
-                    <div class="mb-3 bg-gray-100 p-3 rounded-xl border border-dashed border-gray-300">
-                        <label class="text-[10px] font-bold text-gray-600 uppercase mb-2 flex items-center gap-1"><i class="ph-bold ph-images"></i> Imagens do Produto</label>
-                        <div id="catalog-${index}-images-list" class="max-h-40 overflow-y-auto pr-1">
-                            ${imagesInputsHtml}
-                            ${(!item.images || item.images.length === 0) ? '<p class="text-[10px] text-gray-400 mb-2">Nenhuma imagem adicionada.</p>' : ''}
-                        </div>
-                        <div class="flex gap-2 mt-2">
-                            <button onclick="addCatalogImageLink(${index})" class="text-[11px] font-bold bg-white border px-3 py-1.5 rounded-lg hover:bg-gray-50 shadow-sm">+ Link</button>
-                            <label class="text-[11px] font-bold bg-brand-blue text-white px-3 py-1.5 rounded-lg hover:bg-blue-800 cursor-pointer text-center shadow-sm">
-                                + Upload
-                                <input type="file" accept="image/*" class="hidden" onchange="handleCatalogImageUpload(event, ${index})">
-                            </label>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-gray-500 uppercase">Ficha Técnica / Detalhes</label>
-                        <textarea id="catalog-details-${index}" rows="4" class="border p-2 rounded text-sm w-full bg-white outline-none focus:border-brand-blue mt-1" placeholder="Ex: Detalhes...">${item.details || ''}</textarea>
+                        <button onclick="event.stopPropagation(); openDeleteModal('catalog', ${index})" class="p-2 bg-red-50 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-colors border border-red-100 shadow-sm"><i class="ph-bold ph-trash"></i></button>
                     </div>
                 `;
                 list.appendChild(div);
             });
-            if(appData.catalog.length === 0) list.innerHTML = '<p class="text-xs text-center text-gray-400 py-4">Catálogo vazio.</p>';
+            if(appData.catalog.length === 0) list.innerHTML = '<p class="text-xs text-center text-gray-400 py-6 border border-dashed border-gray-300 rounded-xl">Seu catálogo está vazio. Adicione um novo produto!</p>';
         }
 
         function renderAdminCategories() {
@@ -1045,21 +1196,8 @@
         }
 
         function syncInputsToData() {
-            for(let i = 0; i < appData.catalog.length; i++) {
-                if(document.getElementById(`catalog-title-${i}`)) {
-                    appData.catalog[i].active = document.getElementById(`catalog-active-${i}`).checked;
-                    appData.catalog[i].title = document.getElementById(`catalog-title-${i}`).value;
-                    appData.catalog[i].subtitle = document.getElementById(`catalog-sub-${i}`).value;
-                    appData.catalog[i].tag = document.getElementById(`catalog-tag-${i}`).value;
-                    appData.catalog[i].details = document.getElementById(`catalog-details-${i}`).value;
-                    const newImages = [];
-                    for(let j = 0; j < appData.catalog[i].images.length; j++) {
-                        const imgInput = document.getElementById(`catalog-${i}-img-${j}`);
-                        if(imgInput && imgInput.value.trim() !== '') newImages.push(imgInput.value.trim());
-                    }
-                    appData.catalog[i].images = newImages;
-                }
-            }
+            // Apenas inputs das Configurações Gerais e Categorias. 
+            // O Catálogo agora é sincronizado direto no Modal (saveAdminProduct)
             for(let i = 0; i < appData.categories.length; i++) {
                 if(document.getElementById(`cat-title-${i}`)) {
                     appData.categories[i].title = document.getElementById(`cat-title-${i}`).value;
@@ -1069,7 +1207,6 @@
                 }
             }
 
-            // FÉRIAS
             if(document.getElementById('adm-vacation-mode')) {
                 appData.vacationMode.active = document.getElementById('adm-vacation-mode').checked;
                 appData.vacationMode.returnDate = document.getElementById('adm-vacation-return').value;
@@ -1085,10 +1222,7 @@
             appData.businessHours.obs = document.getElementById('adm-time-obs').value;
         }
 
-        window.addCatalogItem = () => { syncInputsToData(); appData.catalog.unshift({ active: true, title: "", subtitle: "", tag: "Oferta", images: [], details: "" }); renderAdminCatalog(); };
         window.addCategory = () => { syncInputsToData(); appData.categories.push({ title: "", subtitle: "", icon: "device-mobile", color: "cyan" }); renderAdminCategories(); };
-        window.addCatalogImageLink = (index) => { syncInputsToData(); appData.catalog[index].images.push(''); renderAdminCatalog(); };
-        window.removeCatalogImage = (catIndex, imgIndex) => { syncInputsToData(); appData.catalog[catIndex].images.splice(imgIndex, 1); renderAdminCatalog(); };
         
         window.moveItem = (type, index, direction) => { 
             syncInputsToData(); 
@@ -1111,11 +1245,6 @@
         window.handleImageUpload = (event, dataKey, previewId) => {
             const file = event.target.files[0]; if (!file) return;
             processImageUpload(file, (base64) => { appData[dataKey] = base64; document.getElementById(previewId).src = base64; });
-        };
-
-        window.handleCatalogImageUpload = (event, catIndex) => {
-            const file = event.target.files[0]; if (!file) return;
-            processImageUpload(file, (base64) => { syncInputsToData(); appData.catalog[catIndex].images.push(base64); renderAdminCatalog(); });
         };
 
         function processImageUpload(file, callback) {
@@ -1158,7 +1287,7 @@
             try {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'bio_settings', 'main');
                 await setDoc(docRef, appData);
-                showToast("Guardado com sucesso!");
+                showToast("Salvo com sucesso!");
                 hideLoader();
             } catch (error) {
                 console.error(error);
@@ -1198,4 +1327,4 @@
         loadDataFromFirebase();
     </script>
 </body>
-                    </html>
+</html>
